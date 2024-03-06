@@ -23,7 +23,7 @@ var Comprobante = /** @class */ (function () {
         typeorm_1.Column({ type: 'date', nullable: true })
     ], Comprobante.prototype, "fechaEmision");
     __decorate([
-        typeorm_1.Column({ type: 'varchar', length: 50, nullable: true })
+        typeorm_1.Column({ type: 'varchar', length: 200, nullable: true })
     ], Comprobante.prototype, "rutaLocal");
     __decorate([
         typeorm_1.Column({ type: 'char', length: 15, nullable: true })

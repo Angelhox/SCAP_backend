@@ -17,7 +17,7 @@ var TipoDescuento = /** @class */ (function () {
         typeorm_1.PrimaryGeneratedColumn()
     ], TipoDescuento.prototype, "id");
     __decorate([
-        typeorm_1.Column({ type: 'varchar', length: 50 })
+        typeorm_1.Column({ type: 'varchar', length: 100 })
     ], TipoDescuento.prototype, "descripcion");
     __decorate([
         typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })

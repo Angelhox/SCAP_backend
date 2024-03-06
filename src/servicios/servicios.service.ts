@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateServicioDto } from './dto/create-servicio.dto';
 import { UpdateServicioDto } from './dto/update-servicio.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Servicio } from './entities/servicio.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ServiciosService {
-  create(createServicioDto: CreateServicioDto) {
-    return 'This action adds a new servicio';
+  constructor(
+    @InjectRepository(Servicio)
+    private readonly servicioRepository: Repository<Servicio>,
+  ) {}
+  async create(createServicioDto: CreateServicioDto) {
+    const { nombre } = createServicioDto;
+    const servicioFound = await this.servicioRepository.findOneBy({ nombre });
+    if (servicioFound) {
+      throw new BadRequestException(
+        'Ya existe un servicio con el nombre ' + nombre,
+      );
+    }
+    const newServicio = this.servicioRepository.create(createServicioDto);
+    return await this.servicioRepository.save(newServicio);
   }
 
-  findAll() {
-    return `This action returns all servicios`;
+  async findAll() {
+    return await this.servicioRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} servicio`;
+  async findOne(id: number) {
+    return await this.servicioRepository.findOneBy({ id });
   }
 
-  update(id: number, updateServicioDto: UpdateServicioDto) {
-    return `This action updates a #${id} servicio`;
+  async update(id: number, updateServicioDto: UpdateServicioDto) {
+    const servicioFound = this.servicioRepository.findOneBy({ id });
+    if (!servicioFound) {
+      throw new ConflictException('No se ha podido encontrar el servicio');
+    }
+
+    return await this.servicioRepository.update(id, updateServicioDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} servicio`;
+  async remove(id: number) {
+    const servicioFound = this.servicioRepository.findOneBy({ id });
+    if (!servicioFound) {
+      throw new ConflictException('No se ha podido encontrar el servicio');
+    }
+    return await this.servicioRepository.delete({ id });
   }
 }

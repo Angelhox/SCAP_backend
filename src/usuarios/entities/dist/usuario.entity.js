@@ -21,7 +21,7 @@ var Usuario = /** @class */ (function () {
         typeorm_1.Column({ type: 'char', length: 20 })
     ], Usuario.prototype, "usuario");
     __decorate([
-        typeorm_1.Column({ type: 'varchar', length: 45 })
+        typeorm_1.Column({ type: 'varchar', length: 255 })
     ], Usuario.prototype, "clave");
     __decorate([
         typeorm_1.Column({ type: 'datetime', "default": function () { return 'CURRENT_TIMESTAMP'; } })

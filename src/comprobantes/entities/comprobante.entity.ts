@@ -17,7 +17,7 @@ export class Comprobante {
   codigo: string;
   @Column({ type: 'date', nullable: true })
   fechaEmision: Date;
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 200, nullable: true })
   rutaLocal: string;
   @Column({ type: 'char', length: 15, nullable: true })
   estado: string;

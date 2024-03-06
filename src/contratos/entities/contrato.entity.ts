@@ -2,11 +2,14 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Medidor } from 'src/medidor/entities/medidor.entity';
 import { ServicioContratado } from 'src/servicio.contratado/entities/servicio.contratado.entity';
+import { Socio } from 'src/socios/entities/socio.entity';
 
 @Entity({ name: 'contratos' })
 export class Contrato {
@@ -43,4 +46,7 @@ export class Contrato {
     (servicioContratado) => servicioContratado.contrato,
   )
   servicioContratado: ServicioContratado;
+  @ManyToOne(() => Socio, (socio) => socio.contrato)
+  @JoinColumn({ name: 'sociosId' })
+  socio: Socio;
 }

@@ -5,7 +5,7 @@ export class Sector {
   @Index({ unique: true })
   @PrimaryGeneratedColumn()
   id: number;
-  // El modelo e base de datos indica que estos campos son Nullable:true, no deberia ser asi, se aumento la precisión de los decimales a 10, scale 2 !!
+  // El modelo e base de datos indica que estos campos son Nullable:true, no deberia ser asi !!
   @Column({ type: 'varchar', length: 50 })
   barrio: string;
   @Column({ type: 'char', length: 10 })

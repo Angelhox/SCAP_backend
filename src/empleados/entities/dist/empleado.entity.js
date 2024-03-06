@@ -42,7 +42,7 @@ var Empleado = /** @class */ (function () {
         typeorm_1.Column({ type: 'varchar', length: 10, "default": 'no' })
     ], Empleado.prototype, "usuarioSn");
     __decorate([
-        typeorm_1.ManyToOne(function () { return cargo_entity_1.Cargo; }, function (cargo) { return cargo.empleado; }, { nullable: true }),
+        typeorm_1.ManyToOne(function () { return cargo_entity_1.Cargo; }, function (cargo) { return cargo.empleado; }, { nullable: false }),
         typeorm_1.JoinColumn({ name: 'cargosId' })
     ], Empleado.prototype, "cargo");
     __decorate([

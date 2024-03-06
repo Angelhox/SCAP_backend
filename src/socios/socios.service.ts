@@ -1,26 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { CreateSocioDto } from './dto/create-socio.dto';
 import { UpdateSocioDto } from './dto/update-socio.dto';
+import { Repository } from 'typeorm';
+import { Socio } from './entities/socio.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class SociosService {
-  create(createSocioDto: CreateSocioDto) {
-    return 'This action adds a new socio';
+  constructor(
+    @InjectRepository(Socio)
+    private readonly socioRepository: Repository<Socio>,
+  ) {}
+  async create(createSocioDto: CreateSocioDto) {
+    const { cedulaPasaporte } = createSocioDto;
+    const socioFound = await this.socioRepository.findOneBy({
+      cedulaPasaporte,
+    });
+    if (socioFound) {
+      throw new BadRequestException(
+        'Ya existe un socio con cédula/pasaporte ' + cedulaPasaporte,
+      );
+    }
+    const newSocio = this.socioRepository.create(createSocioDto);
+    return await this.socioRepository.save(newSocio);
   }
 
-  findAll() {
-    return `This action returns all socios`;
+  async findAll() {
+    return await this.socioRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} socio`;
+  async findOne(id: number) {
+    return await this.socioRepository.findOneBy({ id });
   }
 
-  update(id: number, updateSocioDto: UpdateSocioDto) {
-    return `This action updates a #${id} socio`;
+  async update(id: number, updateSocioDto: UpdateSocioDto) {
+    const socioFound = await this.socioRepository.findOneBy({ id });
+    if (!socioFound) {
+      throw new ConflictException('No se ha podido encontrar el socio');
+    }
+    return await this.socioRepository.update(id, updateSocioDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} socio`;
+  async remove(id: number) {
+    const socioFound = await this.socioRepository.findOneBy({ id });
+    if (!socioFound) {
+      throw new ConflictException('No se ha podido encontrar el socio');
+    }
+    return await this.socioRepository.delete({ id });
   }
 }

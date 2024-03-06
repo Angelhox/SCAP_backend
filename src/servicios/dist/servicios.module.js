@@ -10,11 +10,14 @@ exports.ServiciosModule = void 0;
 var common_1 = require("@nestjs/common");
 var servicios_service_1 = require("./servicios.service");
 var servicios_controller_1 = require("./servicios.controller");
+var typeorm_1 = require("@nestjs/typeorm");
+var servicio_entity_1 = require("./entities/servicio.entity");
 var ServiciosModule = /** @class */ (function () {
     function ServiciosModule() {
     }
     ServiciosModule = __decorate([
         common_1.Module({
+            imports: [typeorm_1.TypeOrmModule.forFeature([servicio_entity_1.Servicio])],
             controllers: [servicios_controller_1.ServiciosController],
             providers: [servicios_service_1.ServiciosService]
         })

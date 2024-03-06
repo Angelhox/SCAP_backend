@@ -16,16 +16,16 @@ var Tarifa = /** @class */ (function () {
         typeorm_1.PrimaryGeneratedColumn()
     ], Tarifa.prototype, "id");
     __decorate([
-        typeorm_1.Column({ type: 'varchar', length: 45 })
+        typeorm_1.Column({ type: 'varchar', length: 45, nullable: true })
     ], Tarifa.prototype, "tarifa");
     __decorate([
-        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2 })
+        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
     ], Tarifa.prototype, "desde");
     __decorate([
-        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2 })
+        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
     ], Tarifa.prototype, "hasta");
     __decorate([
-        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2 })
+        typeorm_1.Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
     ], Tarifa.prototype, "valor");
     Tarifa = __decorate([
         typeorm_1.Entity({ name: 'tarifas' })

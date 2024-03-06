@@ -12,7 +12,7 @@ export class TipoDescuento {
   @Index({ unique: true })
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'varchar', length: 50 })
+  @Column({ type: 'varchar', length: 100 })
   descripcion: string;
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   valor: number;

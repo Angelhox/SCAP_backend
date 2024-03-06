@@ -72,7 +72,7 @@ var Socio = /** @class */ (function () {
         })
     ], Socio.prototype, "calleSecundaria");
     __decorate([
-        typeorm_1.Column({ type: 'char', length: 8, nullable: true })
+        typeorm_1.Column({ type: 'char', length: 8, nullable: true, "default": '999' })
     ], Socio.prototype, "numeroCasa");
     __decorate([
         typeorm_1.Column({ type: 'varchar', length: 100, "default": 'Referencia' })

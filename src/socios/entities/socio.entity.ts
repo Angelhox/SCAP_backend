@@ -1,10 +1,14 @@
+import { Contrato } from 'src/contratos/entities/contrato.entity';
 import { EstadoCuenta } from 'src/estado.cuenta/entities/estado.cuenta.entity';
+import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Index,
   Column,
   OneToMany,
+  JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 @Entity({ name: 'socios' })
 export class Socio {
@@ -52,10 +56,14 @@ export class Socio {
     nullable: true,
   })
   calleSecundaria: string;
-  @Column({ type: 'char', length: 8, nullable: true })
+  @Column({ type: 'char', length: 8, nullable: true, default: '999' })
   numeroCasa: string;
   @Column({ type: 'varchar', length: 100, default: 'Referencia' })
   referencia: string;
   @OneToMany(() => EstadoCuenta, (estadoCuenta) => estadoCuenta.socio)
   estadoCuenta: EstadoCuenta;
+  @OneToMany(() => Contrato, (contrato) => contrato.socio)
+  contrato: Contrato;
+  @OneToMany(() => Usuario, (usuario) => usuario.socio)
+  usuario: Usuario;
 }

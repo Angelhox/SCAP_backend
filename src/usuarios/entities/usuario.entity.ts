@@ -1,5 +1,6 @@
 import { Empleado } from 'src/empleados/entities/empleado.entity';
 import { Rol } from 'src/rol/entities/rol.entity';
+import { Socio } from 'src/socios/entities/socio.entity';
 import {
   Column,
   Entity,
@@ -16,7 +17,7 @@ export class Usuario {
   id: number;
   @Column({ type: 'char', length: 20 })
   usuario: string;
-  @Column({ type: 'varchar', length: 45 })
+  @Column({ type: 'varchar', length: 255, select: false })
   clave: string;
   // En el modelo no se especifica un valor por defecto para este campo, pero se deberia tomar CURRENT_TIMESTAMP !!
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
@@ -25,7 +26,10 @@ export class Usuario {
   @JoinColumn({ name: 'rolesId' })
   rol: Rol;
   // En el modelo el valor por defecto de este campo es null, sin embargo, no es lo correcto !!
-  @ManyToOne(() => Empleado, (empleado) => empleado.usuario)
+  @ManyToOne(() => Empleado, (empleado) => empleado.usuario, { nullable: true })
   @JoinColumn({ name: 'empleadosId' })
   empleado: Empleado;
+  @ManyToOne(() => Socio, (socio) => socio.usuario, { nullable: true })
+  @JoinColumn({ name: 'sociosId' })
+  socio: Socio;
 }

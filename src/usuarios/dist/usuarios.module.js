@@ -20,7 +20,8 @@ var UsuariosModule = /** @class */ (function () {
         common_1.Module({
             imports: [typeorm_1.TypeOrmModule.forFeature([usuario_entity_1.Usuario, rol_entity_1.Rol])],
             controllers: [usuarios_controller_1.UsuariosController],
-            providers: [usuarios_service_1.UsuariosService]
+            providers: [usuarios_service_1.UsuariosService],
+            exports: [usuarios_service_1.UsuariosService]
         })
     ], UsuariosModule);
     return UsuariosModule;

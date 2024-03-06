@@ -19,19 +19,21 @@ import { MedidorModule } from './medidor/medidor.module';
 import { TipoDescuentoModule } from './tipo.descuento/tipo.descuento.module';
 import { SectorModule } from './sector/sector.module';
 import { RolModule } from './rol/rol.module';
+import { KardexModule } from './kardex/kardex.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3308,
-      username: 'root',
-      password: '',
-      database: 'scap_test',
+      port: 3309,
+      username: 'user_scap',
+      password: 'root',
+      database: 'bdscap_sd_v3',
       autoLoadEntities: true,
       // Synchronize solo debe estar activo en desarrollo no en produccion !!
-      synchronize: true,
+      // synchronize: true,
     }),
     SociosModule,
     ContratosModule,
@@ -51,6 +53,8 @@ import { RolModule } from './rol/rol.module';
     TipoDescuentoModule,
     SectorModule,
     RolModule,
+    KardexModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
