@@ -30,20 +30,32 @@ var sector_module_1 = require("./sector/sector.module");
 var rol_module_1 = require("./rol/rol.module");
 var kardex_module_1 = require("./kardex/kardex.module");
 var auth_module_1 = require("./auth/auth.module");
+var config_1 = require("@nestjs/config");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
         common_1.Module({
             imports: [
+                config_1.ConfigModule.forRoot(),
                 typeorm_1.TypeOrmModule.forRoot({
                     type: 'mysql',
-                    host: 'localhost',
-                    port: 3308,
-                    username: 'root',
-                    password: '',
-                    database: 'bdscap_sd_v4',
-                    autoLoadEntities: true
+                    host: process.env.DB_HOST,
+                    port: parseInt(process.env.DB_PORT),
+                    username: process.env.DB_USERNAME,
+                    password: process.env.DB_PASSWORD,
+                    database: process.env.DB_DATABASE,
+                    autoLoadEntities: true,
+                    // Synchronize solo debe estar activo en desarrollo no en produccion !!
+                    // synchronize: true,
+                    ssl: process.env.DB_SSL === 'true',
+                    extra: {
+                        ssl: process.env.DB_SSL === 'true'
+                            ? {
+                                rejectUnauthorized: false
+                            }
+                            : null
+                    }
                 }),
                 socios_module_1.SociosModule,
                 contratos_module_1.ContratosModule,

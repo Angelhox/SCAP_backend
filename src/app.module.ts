@@ -21,19 +21,32 @@ import { SectorModule } from './sector/sector.module';
 import { RolModule } from './rol/rol.module';
 import { KardexModule } from './kardex/kardex.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3308,
-      username: 'root',
-      password: '',
-      database: 'bdscap_sd_v4',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+
       autoLoadEntities: true,
+
       // Synchronize solo debe estar activo en desarrollo no en produccion !!
       // synchronize: true,
+      ssl: process.env.DB_SSL === 'true',
+      extra: {
+        ssl:
+          process.env.DB_SSL === 'true'
+            ? {
+                rejectUnauthorized: false,
+              }
+            : null,
+      },
     }),
     SociosModule,
     ContratosModule,
