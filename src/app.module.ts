@@ -27,10 +27,10 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
-      port: 3309,
-      username: 'user_scap',
-      password: 'root',
-      database: 'bdscap_sd_v3',
+      port: 3308,
+      username: 'root',
+      password: '',
+      database: 'bdscap_sd_v4',
       autoLoadEntities: true,
       // Synchronize solo debe estar activo en desarrollo no en produccion !!
       // synchronize: true,

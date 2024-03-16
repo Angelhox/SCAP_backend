@@ -29,6 +29,7 @@ var tipo_descuento_module_1 = require("./tipo.descuento/tipo.descuento.module");
 var sector_module_1 = require("./sector/sector.module");
 var rol_module_1 = require("./rol/rol.module");
 var kardex_module_1 = require("./kardex/kardex.module");
+var auth_module_1 = require("./auth/auth.module");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -38,10 +39,10 @@ var AppModule = /** @class */ (function () {
                 typeorm_1.TypeOrmModule.forRoot({
                     type: 'mysql',
                     host: 'localhost',
-                    port: 3309,
-                    username: 'user_scap',
-                    password: 'root',
-                    database: 'bdscap_sd_v3',
+                    port: 3308,
+                    username: 'root',
+                    password: '',
+                    database: 'bdscap_sd_v4',
                     autoLoadEntities: true
                 }),
                 socios_module_1.SociosModule,
@@ -63,6 +64,7 @@ var AppModule = /** @class */ (function () {
                 sector_module_1.SectorModule,
                 rol_module_1.RolModule,
                 kardex_module_1.KardexModule,
+                auth_module_1.AuthModule,
             ],
             controllers: [app_controller_1.AppController],
             providers: [app_service_1.AppService]

@@ -35,6 +35,7 @@ export class EmpleadosController {
   // findAll(@Request() req) {
   //   return req.user;
   // }
+  // Es solo un ejemplo en realidad solo necesiatamos validar el rol esto seria util en las actualizaciones o inserciones donde debemos almacenar quien realizo estas acciones !!
   @Get()
   @Auth(Role.AUDITOR)
   findAll(@ActiveUser() user: UserActiveInterface) {
