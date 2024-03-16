@@ -52,7 +52,7 @@ function bootstrap() {
                     // forbidNonWhitelisted: true,
                     // transform: true,
                     }));
-                    return [4 /*yield*/, app.listen(3000)];
+                    return [4 /*yield*/, app.listen(parseInt(process.env.PORT) || 3000)];
                 case 2:
                     _a.sent();
                     return [2 /*return*/];

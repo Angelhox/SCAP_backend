@@ -37,7 +37,7 @@ var AppModule = /** @class */ (function () {
     AppModule = __decorate([
         common_1.Module({
             imports: [
-                config_1.ConfigModule.forRoot(),
+                config_1.ConfigModule.forRoot({ isGlobal: true }),
                 typeorm_1.TypeOrmModule.forRoot({
                     type: 'mysql',
                     host: process.env.DB_HOST,
