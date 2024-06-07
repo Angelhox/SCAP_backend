@@ -15,7 +15,7 @@ export class Cargo {
   @Column({ type: 'varchar', length: 45 })
   cargo: string;
   @Column({ type: 'varchar', length: 100 })
-  cargodescipcion: string;
+  cargodescripcion: string;
   @OneToMany(() => Empleado, (empleado) => empleado.cargo)
   empleado: Empleado;
 }

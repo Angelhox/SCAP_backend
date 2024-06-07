@@ -47,12 +47,18 @@ function bootstrap() {
                 case 0: return [4 /*yield*/, core_1.NestFactory.create(app_module_1.AppModule)];
                 case 1:
                     app = _a.sent();
+                    app.enableCors({
+                        credentials: true,
+                        origin: '*',
+                        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+                        allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+                    });
                     app.useGlobalPipes(new common_1.ValidationPipe({
                     // whitelist: true,
                     // forbidNonWhitelisted: true,
                     // transform: true,
                     }));
-                    return [4 /*yield*/, app.listen(parseInt(process.env.PORT) || 3000)];
+                    return [4 /*yield*/, app.listen(parseInt(process.env.PORT) || 4000)];
                 case 2:
                     _a.sent();
                     return [2 /*return*/];

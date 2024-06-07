@@ -1,7 +1,9 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { UsuariosService } from 'src/usuarios/usuarios.service';
@@ -11,6 +13,7 @@ import { RegisterDto } from './dto/register.dto';
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(forwardRef(() => UsuariosService))
     private readonly usuariosService: UsuariosService,
     private readonly jwtService: JwtService,
   ) {}
@@ -23,6 +26,7 @@ export class AuthService {
     };
   }
   async login({ usuario, clave }: LoginDto) {
+    console.log('Recibido: ', usuario, clave);
     const user = await this.usuariosService.findOneByUserWithPass(usuario);
     if (!user) {
       throw new UnauthorizedException('El usuario es incorrecto o no existe !');

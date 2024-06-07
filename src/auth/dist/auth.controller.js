@@ -11,15 +11,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 exports.__esModule = true;
 exports.AuthController = void 0;
 var common_1 = require("@nestjs/common");
+var auth_decorator_1 = require("./decorators/auth.decorator");
+var active_user_decorator_1 = require("src/common/decorators/active-user.decorator");
+var rol_enum_1 = require("src/common/enums/rol.enum");
 var AuthController = /** @class */ (function () {
     function AuthController(authService) {
         this.authService = authService;
     }
     AuthController.prototype.login = function (loginDto) {
+        console.log('Recibido en controlle: ', loginDto);
         return this.authService.login(loginDto);
     };
     AuthController.prototype.register = function (registerDto) {
         return this.authService.register(registerDto);
+    };
+    AuthController.prototype.check = function (user) {
+        return user;
     };
     __decorate([
         common_1.Post('login'),
@@ -29,6 +36,11 @@ var AuthController = /** @class */ (function () {
         common_1.Post('register'),
         __param(0, common_1.Body())
     ], AuthController.prototype, "register");
+    __decorate([
+        common_1.Get('check'),
+        auth_decorator_1.Auth(rol_enum_1.Role.AUDITOR),
+        __param(0, active_user_decorator_1.ActiveUser())
+    ], AuthController.prototype, "check");
     AuthController = __decorate([
         common_1.Controller('auth')
     ], AuthController);

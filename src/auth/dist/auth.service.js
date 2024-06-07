@@ -75,7 +75,9 @@ var AuthService = /** @class */ (function () {
             var user, isPassworValid, rol, payload, token;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4 /*yield*/, this.usuariosService.findOneByUser(usuario)];
+                    case 0:
+                        console.log('Recibido: ', usuario, clave);
+                        return [4 /*yield*/, this.usuariosService.findOneByUserWithPass(usuario)];
                     case 1:
                         user = _b.sent();
                         if (!user) {

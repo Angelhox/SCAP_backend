@@ -25,11 +25,18 @@ var UsuariosService = /** @class */ (function () {
         return this.usuariosRepository.find({ relations: ['rol', 'empleado'] });
     };
     UsuariosService.prototype.findOne = function (id) {
-        return "This action returns a #" + id + " usuario";
+        return "This actions returns a #" + id + " usuario";
     };
     UsuariosService.prototype.findOneByUser = function (usuario) {
         return this.usuariosRepository.findOne({
             where: { usuario: usuario },
+            relations: ['rol', 'empleado']
+        });
+    };
+    UsuariosService.prototype.findOneByUserWithPass = function (usuario) {
+        return this.usuariosRepository.findOne({
+            where: { usuario: usuario },
+            select: ['id', 'usuario', 'clave', 'fechaModificacion'],
             relations: ['rol']
         });
     };
