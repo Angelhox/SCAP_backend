@@ -15,15 +15,15 @@ export class Usuario {
   @Index({ unique: true })
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: 'char', length: 20 })
+  @Column({ type: 'varchar', length: 255 })
   usuario: string;
-  @Column({ type: 'varchar', length: 255, select: false })
+  @Column({ type: 'varchar', length: 45, select: false })
   clave: string;
   // En el modelo no se especifica un valor por defecto para este campo, pero se deberia tomar CURRENT_TIMESTAMP !!
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   fechaModificacion: Date;
   @ManyToOne(() => Rol, (rol) => rol.usuario, { nullable: false })
-  @JoinColumn({ name: 'rolesId' })
+  @JoinColumn({ name: 'rolesId', referencedColumnName: 'id' })
   rol: Rol;
   // En el modelo el valor por defecto de este campo es null, sin embargo, no es lo correcto !!
   @ManyToOne(() => Empleado, (empleado) => empleado.usuario, { nullable: true })

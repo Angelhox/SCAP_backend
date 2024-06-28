@@ -13,7 +13,6 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDto: LoginDto) {
     console.log('Recibido en controlle: ', loginDto);
-
     return this.authService.login(loginDto);
   }
   @Post('register')
@@ -21,7 +20,7 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
   @Get('check')
-  @Auth(Role.AUDITOR)
+  @Auth(Role.ADMIN)
   check(@ActiveUser() user: UserActiveInterface) {
     return user;
   }

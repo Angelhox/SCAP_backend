@@ -17,12 +17,7 @@ export class ServiciosService {
   ) {}
   async create(createServicioDto: CreateServicioDto) {
     const { nombre } = createServicioDto;
-    const servicioFound = await this.servicioRepository.findOneBy({ nombre });
-    if (servicioFound) {
-      throw new BadRequestException(
-        'Ya existe un servicio con el nombre ' + nombre,
-      );
-    }
+    await this.validateNombreServicio(nombre);
     const newServicio = this.servicioRepository.create(createServicioDto);
     return await this.servicioRepository.save(newServicio);
   }
@@ -36,19 +31,34 @@ export class ServiciosService {
   }
 
   async update(id: number, updateServicioDto: UpdateServicioDto) {
-    const servicioFound = this.servicioRepository.findOneBy({ id });
-    if (!servicioFound) {
-      throw new ConflictException('No se ha podido encontrar el servicio');
-    }
-
+    const { nombre } = updateServicioDto;
+    await this.validateUpdateNombreServicio(id, nombre);
     return await this.servicioRepository.update(id, updateServicioDto);
   }
 
   async remove(id: number) {
+    await this.validateServicio(id);
+    return await this.servicioRepository.delete({ id });
+  }
+  private async validateNombreServicio(nombre: string) {
+    const servicioFound = await this.servicioRepository.findOneBy({ nombre });
+    if (servicioFound) {
+      throw new BadRequestException(
+        'Ya existe un servicio con el nombre ' + nombre,
+      );
+    }
+  }
+  private async validateServicio(id: number) {
     const servicioFound = this.servicioRepository.findOneBy({ id });
     if (!servicioFound) {
       throw new ConflictException('No se ha podido encontrar el servicio');
     }
-    return await this.servicioRepository.delete({ id });
+    return servicioFound;
+  }
+  private async validateUpdateNombreServicio(id: number, nombre: string) {
+    const { nombre: nombreFound } = await this.validateServicio(id);
+    if (nombre !== nombreFound) {
+      await this.validateNombreServicio(nombre);
+    }
   }
 }

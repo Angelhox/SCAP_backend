@@ -34,7 +34,7 @@ export class UsuariosController {
     return this.usuariosService.findOne(+id);
   }
   @Post('/profile')
-  @Auth(Role.AUDITOR)
+  @Auth(Role.ADMIN)
   findOneByUser(@ActiveUser() userActiveInterface: UserActiveInterface) {
     return this.usuariosService.findOneByUser(userActiveInterface.email);
   }

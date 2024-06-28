@@ -9,5 +9,6 @@ import { Cargo } from 'src/cargos/entities/cargo.entity';
   imports: [TypeOrmModule.forFeature([Empleado, Cargo])],
   controllers: [EmpleadosController],
   providers: [EmpleadosService],
+  exports: [EmpleadosService],
 })
 export class EmpleadosModule {}

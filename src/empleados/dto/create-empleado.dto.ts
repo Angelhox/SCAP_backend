@@ -1,10 +1,12 @@
 import { Transform } from 'class-transformer';
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
 
@@ -47,4 +49,8 @@ export class CreateEmpleadoDto {
   @IsNotEmpty()
   @Transform(({ value }) => value.trim())
   usuarioSn: string;
+  @Min(1)
+  @IsNotEmpty()
+  @IsInt()
+  cargosId: number;
 }

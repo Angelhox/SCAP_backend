@@ -33,7 +33,7 @@ export class Empleado {
   usuarioSn: string;
   // El modelo indica que el cargo es nullable revisar si es lo correcto ??
   @ManyToOne(() => Cargo, (cargo) => cargo.empleado, { nullable: false })
-  @JoinColumn({ name: 'cargosId' })
+  @JoinColumn({ name: 'cargosId', referencedColumnName: 'id' })
   cargo: Cargo;
   @OneToMany(() => Usuario, (usuario) => usuario.empleado)
   usuario: Usuario;

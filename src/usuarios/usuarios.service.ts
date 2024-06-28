@@ -12,14 +12,20 @@ import { Repository } from 'typeorm';
 import { AuthService } from 'src/auth/auth.service';
 import { plainToClass } from 'class-transformer';
 import { RegisterDto } from 'src/auth/dto/register.dto';
+import { Rol } from 'src/rol/entities/rol.entity';
+import { Empleado } from 'src/empleados/entities/empleado.entity';
 
 @Injectable()
 export class UsuariosService {
   constructor(
     @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
     @InjectRepository(Usuario)
     private usuariosRepository: Repository<Usuario>,
-    private readonly authService: AuthService,
+    @InjectRepository(Rol)
+    private readonly rolRepository: Repository<Rol>,
+    @InjectRepository(Empleado)
+    private readonly empleadosRepository: Repository<Empleado>,
   ) {}
   async create(createUsuarioDto: CreateUsuarioDto) {
     const { usuario } = createUsuarioDto;
@@ -27,6 +33,8 @@ export class UsuariosService {
     if (usuarioFound) {
       throw new BadRequestException('El nombre de usuario ya esta en uso');
     }
+    const rol = await this.validateRol(createUsuarioDto.rolesId);
+    const empleado = await this.validateEmpleado(createUsuarioDto.empleadosId);
     // Crear una instancia de RegisterDto
     const registerDto = plainToClass(RegisterDto, {
       clave: createUsuarioDto.clave,
@@ -34,13 +42,20 @@ export class UsuariosService {
     // Pasar la instancia de RegisterDto al método register
     const { clave } = await this.authService.register(registerDto);
     createUsuarioDto.clave = clave;
-    const newUsuario = this.usuariosRepository.create(createUsuarioDto);
+    const newUsuario = this.usuariosRepository.create({
+      ...createUsuarioDto,
+      clave: clave,
+      rol,
+      empleado,
+    });
     return await this.usuariosRepository.save(newUsuario);
   }
 
-  findAll() {
+  async findAll() {
     // return `This action returns all usuarios`;
-    return this.usuariosRepository.find({ relations: ['rol', 'empleado'] });
+    return await this.usuariosRepository.find({
+      relations: ['rol', 'empleado'],
+    });
   }
 
   findOne(id: number) {
@@ -65,5 +80,19 @@ export class UsuariosService {
 
   remove(id: number) {
     return `This action removes a #${id} usuario`;
+  }
+  private async validateRol(id: number) {
+    const rolEntity = await this.rolRepository.findOneBy({ id: id });
+    if (!rolEntity) {
+      throw new BadRequestException('Rol not found');
+    }
+    return rolEntity;
+  }
+  private async validateEmpleado(id: number) {
+    const empleadoEntity = await this.empleadosRepository.findOneBy({ id: id });
+    if (!empleadoEntity) {
+      throw new BadRequestException('Empleado not found');
+    }
+    return empleadoEntity;
   }
 }

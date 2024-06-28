@@ -17,14 +17,7 @@ export class SociosService {
   ) {}
   async create(createSocioDto: CreateSocioDto) {
     const { cedulaPasaporte } = createSocioDto;
-    const socioFound = await this.socioRepository.findOneBy({
-      cedulaPasaporte,
-    });
-    if (socioFound) {
-      throw new BadRequestException(
-        'Ya existe un socio con cédula/pasaporte ' + cedulaPasaporte,
-      );
-    }
+    await this.validateCedulaPasaporte(cedulaPasaporte);
     const newSocio = this.socioRepository.create(createSocioDto);
     return await this.socioRepository.save(newSocio);
   }
@@ -38,18 +31,41 @@ export class SociosService {
   }
 
   async update(id: number, updateSocioDto: UpdateSocioDto) {
-    const socioFound = await this.socioRepository.findOneBy({ id });
-    if (!socioFound) {
-      throw new ConflictException('No se ha podido encontrar el socio');
-    }
+    const { cedulaPasaporte } = updateSocioDto;
+    await this.validateUpdateCedulaPasaporte(id, cedulaPasaporte);
     return await this.socioRepository.update(id, updateSocioDto);
   }
 
   async remove(id: number) {
+    await this.validateSocio(id);
+    return await this.socioRepository.softDelete({ id });
+  }
+  private async validateCedulaPasaporte(cedulaPasaporte: string) {
+    const socioFound = await this.socioRepository.findOneBy({
+      cedulaPasaporte,
+    });
+    if (socioFound) {
+      throw new BadRequestException(
+        'Ya existe un socio con cédula/pasaporte ' + cedulaPasaporte,
+      );
+    }
+  }
+  private async validateSocio(id: number) {
     const socioFound = await this.socioRepository.findOneBy({ id });
     if (!socioFound) {
       throw new ConflictException('No se ha podido encontrar el socio');
     }
-    return await this.socioRepository.delete({ id });
+    return socioFound;
+  }
+  private async validateUpdateCedulaPasaporte(
+    id: number,
+    cedulaPasaporte: string,
+  ) {
+    const { cedulaPasaporte: cedulaPasaporteFound } = await this.validateSocio(
+      id,
+    );
+    if (cedulaPasaporte !== cedulaPasaporteFound) {
+      await this.validateCedulaPasaporte(cedulaPasaporte);
+    }
   }
 }

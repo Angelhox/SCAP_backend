@@ -9,6 +9,7 @@ import {
   OneToMany,
   JoinColumn,
   ManyToOne,
+  DeleteDateColumn,
 } from 'typeorm';
 @Entity({ name: 'socios' })
 export class Socio {
@@ -60,6 +61,8 @@ export class Socio {
   numeroCasa: string;
   @Column({ type: 'varchar', length: 100, default: 'Referencia' })
   referencia: string;
+  @DeleteDateColumn()
+  deleteAt: Date;
   @OneToMany(() => EstadoCuenta, (estadoCuenta) => estadoCuenta.socio)
   estadoCuenta: EstadoCuenta;
   @OneToMany(() => Contrato, (contrato) => contrato.socio)

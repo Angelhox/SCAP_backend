@@ -22,6 +22,7 @@ import { RolModule } from './rol/rol.module';
 import { KardexModule } from './kardex/kardex.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { EmpleadoUsuarioModule } from './empleado.usuario/empleado.usuario.module';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { ConfigModule } from '@nestjs/config';
 
       autoLoadEntities: true,
 
-      // Synchronize solo debe estar activo en desarrollo no en produccion !!
+      // // Synchronize solo debe estar activo en desarrollo no en produccion !!
       // synchronize: true,
       ssl: process.env.DB_SSL === 'true',
       extra: {
@@ -68,6 +69,7 @@ import { ConfigModule } from '@nestjs/config';
     SectorModule,
     RolModule,
     KardexModule,
+    EmpleadoUsuarioModule,
   ],
   controllers: [AppController],
   providers: [AppService],

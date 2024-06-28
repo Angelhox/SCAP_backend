@@ -46,7 +46,7 @@ export class Contrato {
     (servicioContratado) => servicioContratado.contrato,
   )
   servicioContratado: ServicioContratado;
-  @ManyToOne(() => Socio, (socio) => socio.contrato)
+  @ManyToOne(() => Socio, (socio) => socio.contrato, { eager: true })
   @JoinColumn({ name: 'sociosId' })
   socio: Socio;
 }
