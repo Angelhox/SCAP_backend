@@ -47,6 +47,9 @@ var Servicio = /** @class */ (function () {
         typeorm_1.Column({ type: 'char', length: 15, nullable: true })
     ], Servicio.prototype, "individualSn");
     __decorate([
+        typeorm_1.Column({ type: 'tinyint' })
+    ], Servicio.prototype, "base");
+    __decorate([
         typeorm_1.OneToMany(function () { return servicio_contratado_entity_1.ServicioContratado; }, function (servicioContratado) { return servicioContratado.servicio; })
     ], Servicio.prototype, "servicioContratado");
     Servicio = __decorate([

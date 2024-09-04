@@ -9,7 +9,6 @@ exports.__esModule = true;
 exports.Medidor = void 0;
 var typeorm_1 = require("typeorm");
 var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
-var planilla_entity_1 = require("src/planillas/entities/planilla.entity");
 var Medidor = /** @class */ (function () {
     function Medidor() {
     }
@@ -21,21 +20,29 @@ var Medidor = /** @class */ (function () {
         typeorm_1.Column({ length: 15, type: 'char', nullable: true, unique: true })
     ], Medidor.prototype, "codigo");
     __decorate([
-        typeorm_1.Column({ type: 'date', nullable: true })
+        typeorm_1.Column({
+            type: 'date'
+        })
     ], Medidor.prototype, "fechaInstalacion");
     __decorate([
-        typeorm_1.Column({ length: 35, type: 'varchar' })
+        typeorm_1.Column({ length: 35, type: 'varchar', nullable: true })
     ], Medidor.prototype, "marca");
     __decorate([
         typeorm_1.Column({ length: 100, type: 'varchar', nullable: true })
     ], Medidor.prototype, "observacion");
     __decorate([
+        typeorm_1.Column({ length: 15, type: 'char', nullable: false })
+    ], Medidor.prototype, "estado");
+    __decorate([
+        typeorm_1.Column({ type: 'date', nullable: true })
+    ], Medidor.prototype, "fechaBaja");
+    __decorate([
+        typeorm_1.Column({ type: 'decimal', nullable: true, precision: 10.2 })
+    ], Medidor.prototype, "ultimaLectura");
+    __decorate([
         typeorm_1.ManyToOne(function () { return contrato_entity_1.Contrato; }, function (contrato) { return contrato.medidor; }),
         typeorm_1.JoinColumn({ name: 'contratosId' })
     ], Medidor.prototype, "contrato");
-    __decorate([
-        typeorm_1.OneToMany(function () { return planilla_entity_1.Planilla; }, function (planilla) { return planilla.medidor; })
-    ], Medidor.prototype, "planilla");
     Medidor = __decorate([
         typeorm_1.Entity({ name: 'medidores' })
     ], Medidor);

@@ -9,6 +9,11 @@ exports.__esModule = true;
 exports.CreateServicioDto = void 0;
 var class_transformer_1 = require("class-transformer");
 var class_validator_1 = require("class-validator");
+var IsBase;
+(function (IsBase) {
+    IsBase[IsBase["Base"] = 1] = "Base";
+    IsBase[IsBase["Otro"] = 0] = "Otro";
+})(IsBase || (IsBase = {}));
 var CreateServicioDto = /** @class */ (function () {
     function CreateServicioDto() {
     }
@@ -40,8 +45,8 @@ var CreateServicioDto = /** @class */ (function () {
         })
     ], CreateServicioDto.prototype, "tipo");
     __decorate([
-        class_validator_1.IsNumber(),
-        class_validator_1.IsNotEmpty()
+        class_validator_1.IsNotEmpty(),
+        class_validator_1.IsNumber()
     ], CreateServicioDto.prototype, "valor");
     __decorate([
         class_validator_1.IsString(),
@@ -80,6 +85,10 @@ var CreateServicioDto = /** @class */ (function () {
             return value.trim();
         })
     ], CreateServicioDto.prototype, "individualSn");
+    __decorate([
+        class_validator_1.IsOptional(),
+        class_validator_1.IsEnum(IsBase)
+    ], CreateServicioDto.prototype, "base");
     return CreateServicioDto;
 }());
 exports.CreateServicioDto = CreateServicioDto;

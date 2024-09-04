@@ -1,0 +1,16 @@
+23-08-2024
+Cambio: 1
+Eliminar la relacion entre contratos-medidores-planillas por una relacion de uno a varios entre contratos-planillas 
+Como?
+Con un script de Javascript
+Para? 
+Cuando registremos un contrato ya no es necesario registrar un medidor 
+Para generar las planillas ya no dependemos de un medidor 
+Podemos llevar el registro de los cambios de medidores 
+28-08-2024
+Cambio: 2
+Eliminar la relacion entre socios-contratos y añadir una tabla de rompimiento entre dichas dos entidades 
+Como?
+Con un Script de Javascript
+Para? 
+Poder dar de baja una relacion entre el socio y el contrato en los casos en los que se necesita cambiar el socio al que le pertenece un contrato con el fin de llevar un registro de "a que socio le pretenecia ese contrato"

@@ -23,6 +23,8 @@ import { KardexModule } from './kardex/kardex.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { EmpleadoUsuarioModule } from './empleado.usuario/empleado.usuario.module';
+import { ContratoMedidorModule } from './contrato.medidor/contrato.medidor.module';
+import { SocioContratoModule } from './socio.contrato/socio.contrato.module';
 
 @Module({
   imports: [
@@ -70,6 +72,8 @@ import { EmpleadoUsuarioModule } from './empleado.usuario/empleado.usuario.modul
     RolModule,
     KardexModule,
     EmpleadoUsuarioModule,
+    ContratoMedidorModule,
+    SocioContratoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

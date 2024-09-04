@@ -1,5 +1,6 @@
 import { Contrato } from 'src/contratos/entities/contrato.entity';
 import { EstadoCuenta } from 'src/estado.cuenta/entities/estado.cuenta.entity';
+import { SocioContrato } from 'src/socio.contrato/entities/socio.contrato.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import {
   Entity,
@@ -65,8 +66,11 @@ export class Socio {
   deleteAt: Date;
   @OneToMany(() => EstadoCuenta, (estadoCuenta) => estadoCuenta.socio)
   estadoCuenta: EstadoCuenta;
-  @OneToMany(() => Contrato, (contrato) => contrato.socio)
-  contrato: Contrato;
+  // Cambio 2
+  // @OneToMany(() => Contrato, (contrato) => contrato.socio)
+  // contrato: Contrato;
   @OneToMany(() => Usuario, (usuario) => usuario.socio)
   usuario: Usuario;
+  @OneToMany(() => SocioContrato, (socioContrato) => socioContrato.socio)
+  socioContrato: SocioContrato;
 }

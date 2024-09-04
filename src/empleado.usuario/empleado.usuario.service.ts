@@ -16,12 +16,15 @@ import { Empleado } from 'src/empleados/entities/empleado.entity';
 import { Cargo } from 'src/cargos/entities/cargo.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Rol } from 'src/rol/entities/rol.entity';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class EmpleadoUsuarioService {
   constructor(
     @Inject(forwardRef(() => UsuariosService))
     private readonly usuariosService: UsuariosService,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
     @Inject(forwardRef(() => EmpleadosService))
     private readonly empleadosService: EmpleadosService,
     private dataSource: DataSource,
@@ -40,18 +43,8 @@ export class EmpleadoUsuarioService {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     queryRunner.startTransaction();
-    const { cedula } = createEmpleadoUsuarioDto.empleado;
-    const empleadoFound = await this.empleadoRepository.findOneBy({ cedula });
-    if (empleadoFound) {
-      throw new BadRequestException(
-        'Ya existe un empleado con cédula ' + cedula,
-      );
-    }
-    const { usuario } = createEmpleadoUsuarioDto.usuario;
-    const usuarioFound = await this.usuarioRepository.findOneBy({ usuario });
-    if (usuarioFound) {
-      throw new BadRequestException('El nombre de usuario ya esta en uso');
-    }
+    await this.validateEmpleado(createEmpleadoUsuarioDto.empleado.cedula);
+    await this.validateNombreUsuario(createEmpleadoUsuarioDto.usuario.usuario);
     const cargo = await this.validateCargo(
       createEmpleadoUsuarioDto.empleado.cargosId,
     );
@@ -65,6 +58,11 @@ export class EmpleadoUsuarioService {
         cargo,
       });
       const savedEmpleado = await queryRunner.manager.save(newEmpleado);
+      const { clave } = await this.authService.register(
+        createEmpleadoUsuarioDto.usuario,
+      );
+      console.log('Clave: ', clave);
+      createEmpleadoUsuarioDto.usuario.clave = clave;
       const newUsuario = this.usuarioRepository.create({
         ...createEmpleadoUsuarioDto.usuario,
         rol,
@@ -96,6 +94,20 @@ export class EmpleadoUsuarioService {
 
   remove(id: number) {
     return `This action removes a #${id} empleadoUsuario`;
+  }
+  private async validateNombreUsuario(usuario: string) {
+    const usuarioFound = await this.usuarioRepository.findOneBy({ usuario });
+    if (usuarioFound) {
+      throw new BadRequestException('El nombre de usuario ya esta en uso');
+    }
+  }
+  private async validateEmpleado(cedula: string) {
+    const empleadoFound = await this.empleadoRepository.findOneBy({ cedula });
+    if (empleadoFound) {
+      throw new BadRequestException(
+        'Ya existe un empleado con cédula ' + cedula,
+      );
+    }
   }
   private async validateCargo(id: number) {
     const cargoEntity = await this.cargoRepository.findOneBy({ id: id });

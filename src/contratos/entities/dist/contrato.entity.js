@@ -10,6 +10,8 @@ exports.Contrato = void 0;
 var typeorm_1 = require("typeorm");
 var medidor_entity_1 = require("src/medidor/entities/medidor.entity");
 var servicio_contratado_entity_1 = require("src/servicio.contratado/entities/servicio.contratado.entity");
+var planilla_entity_1 = require("src/planillas/entities/planilla.entity");
+var socio_contrato_entity_1 = require("src/socio.contrato/entities/socio.contrato.entity");
 var Contrato = /** @class */ (function () {
     function Contrato() {
     }
@@ -51,11 +53,17 @@ var Contrato = /** @class */ (function () {
         typeorm_1.Column({ type: 'int', width: 11, nullable: true })
     ], Contrato.prototype, "serviciosCompartidos");
     __decorate([
-        typeorm_1.OneToMany(function () { return medidor_entity_1.Medidor; }, function (medidor) { return medidor.contrato; })
+        typeorm_1.OneToMany(function () { return medidor_entity_1.Medidor; }, function (medidor) { return medidor.contrato; }, { eager: true })
     ], Contrato.prototype, "medidor");
+    __decorate([
+        typeorm_1.OneToMany(function () { return planilla_entity_1.Planilla; }, function (planilla) { return planilla.contrato; })
+    ], Contrato.prototype, "planilla");
     __decorate([
         typeorm_1.OneToMany(function () { return servicio_contratado_entity_1.ServicioContratado; }, function (servicioContratado) { return servicioContratado.contrato; })
     ], Contrato.prototype, "servicioContratado");
+    __decorate([
+        typeorm_1.OneToMany(function () { return socio_contrato_entity_1.SocioContrato; }, function (socioContrato) { return socioContrato.contrato; })
+    ], Contrato.prototype, "socioContrato");
     Contrato = __decorate([
         typeorm_1.Entity({ name: 'contratos' })
     ], Contrato);

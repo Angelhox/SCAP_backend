@@ -25,6 +25,11 @@ export class ServiciosController {
     return this.serviciosService.findAll();
   }
 
+  @Get('base')
+  findServicioBase() {
+    return this.serviciosService.findServicioBase();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.serviciosService.findOne(+id);

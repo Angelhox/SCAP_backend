@@ -32,6 +32,8 @@ export class Servicio {
   valoresDistintosSn: string;
   @Column({ type: 'char', length: 15, nullable: true })
   individualSn: string;
+  @Column({ type: 'tinyint' })
+  base: number;
   @OneToMany(
     () => ServicioContratado,
     (servicioContratado) => servicioContratado.servicio,

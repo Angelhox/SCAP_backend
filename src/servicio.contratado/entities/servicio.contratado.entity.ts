@@ -36,13 +36,14 @@ export class ServicioContratado {
   contrato: Contrato;
   @ManyToOne(() => Servicio, (servicio) => servicio.servicioContratado, {
     nullable: false,
+    eager: true,
   })
   @JoinColumn({ name: 'serviciosId' })
   servicio: Servicio;
   @ManyToOne(
     () => TipoDescuento,
     (tipoDescuento) => tipoDescuento.servicioContratado,
-    { nullable: false },
+    { nullable: false, eager: true },
   )
   @JoinColumn({ name: 'descuentosId' })
   tipoDescuento: TipoDescuento;

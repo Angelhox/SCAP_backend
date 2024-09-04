@@ -21,6 +21,9 @@ var ContratosController = /** @class */ (function () {
     ContratosController.prototype.findAll = function () {
         return this.contratosService.findAll();
     };
+    ContratosController.prototype.findBySocio = function (id) {
+        return this.contratosService.findBySocio(+id);
+    };
     ContratosController.prototype.findOne = function (id) {
         return this.contratosService.findOne(+id);
     };
@@ -37,6 +40,10 @@ var ContratosController = /** @class */ (function () {
     __decorate([
         common_1.Get()
     ], ContratosController.prototype, "findAll");
+    __decorate([
+        common_1.Get('/socio/:id'),
+        __param(0, common_1.Param('id'))
+    ], ContratosController.prototype, "findBySocio");
     __decorate([
         common_1.Get(':id'),
         __param(0, common_1.Param('id'))

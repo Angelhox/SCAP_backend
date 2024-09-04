@@ -25,6 +25,10 @@ export class ContratosController {
     return this.contratosService.findAll();
   }
 
+  @Get('/socio/:id')
+  findBySocio(@Param('id') id: string) {
+    return this.contratosService.findBySocio(+id);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.contratosService.findOne(+id);

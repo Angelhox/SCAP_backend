@@ -24,7 +24,6 @@ export class CreateUsuarioDto {
   clave: string;
   @IsOptional()
   @IsDateString()
-  @Transform(({ value }) => value.trim())
   fechaModificacion: Date;
   @IsNotEmpty()
   @IsInt()

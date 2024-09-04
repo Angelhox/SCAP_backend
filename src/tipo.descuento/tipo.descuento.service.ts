@@ -1,15 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTipoDescuentoDto } from './dto/create-tipo.descuento.dto';
 import { UpdateTipoDescuentoDto } from './dto/update-tipo.descuento.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TipoDescuento } from './entities/tipo.descuento.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TipoDescuentoService {
-  create(createTipoDescuentoDto: CreateTipoDescuentoDto) {
-    return 'This action adds a new tipoDescuento';
+  constructor(
+    @InjectRepository(TipoDescuento)
+    private readonly tiposDescuentoRepository: Repository<TipoDescuento>,
+  ) {}
+  async create(createTipoDescuentoDto: CreateTipoDescuentoDto) {
+    return 'This action return all tipodDescuento';
   }
 
-  findAll() {
-    return `This action returns all tipoDescuento`;
+  async findAll() {
+    return await this.tiposDescuentoRepository.find();
   }
 
   findOne(id: number) {

@@ -9,12 +9,14 @@ import { Empleado } from 'src/empleados/entities/empleado.entity';
 import { Cargo } from 'src/cargos/entities/cargo.entity';
 import { Usuario } from 'src/usuarios/entities/usuario.entity';
 import { Rol } from 'src/rol/entities/rol.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Empleado, Cargo, Usuario, Rol]),
     UsuariosModule,
     EmpleadosModule,
+    AuthModule,
   ],
   controllers: [EmpleadoUsuarioController],
   providers: [EmpleadoUsuarioService],

@@ -31,6 +31,9 @@ var rol_module_1 = require("./rol/rol.module");
 var kardex_module_1 = require("./kardex/kardex.module");
 var auth_module_1 = require("./auth/auth.module");
 var config_1 = require("@nestjs/config");
+var empleado_usuario_module_1 = require("./empleado.usuario/empleado.usuario.module");
+var contrato_medidor_module_1 = require("./contrato.medidor/contrato.medidor.module");
+var socio_contrato_module_1 = require("./socio.contrato/socio.contrato.module");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -46,7 +49,7 @@ var AppModule = /** @class */ (function () {
                     password: process.env.DB_PASSWORD,
                     database: process.env.DB_DATABASE,
                     autoLoadEntities: true,
-                    // Synchronize solo debe estar activo en desarrollo no en produccion !!
+                    // // Synchronize solo debe estar activo en desarrollo no en produccion !!
                     // synchronize: true,
                     ssl: process.env.DB_SSL === 'true',
                     extra: {
@@ -66,6 +69,7 @@ var AppModule = /** @class */ (function () {
                 detalles_servicio_module_1.DetallesServicioModule,
                 empleados_module_1.EmpleadosModule,
                 cargos_module_1.CargosModule,
+                auth_module_1.AuthModule,
                 usuarios_module_1.UsuariosModule,
                 tarifas_module_1.TarifasModule,
                 estado_cuenta_module_1.EstadoCuentaModule,
@@ -76,7 +80,9 @@ var AppModule = /** @class */ (function () {
                 sector_module_1.SectorModule,
                 rol_module_1.RolModule,
                 kardex_module_1.KardexModule,
-                auth_module_1.AuthModule,
+                empleado_usuario_module_1.EmpleadoUsuarioModule,
+                contrato_medidor_module_1.ContratoMedidorModule,
+                socio_contrato_module_1.SocioContratoModule,
             ],
             controllers: [app_controller_1.AppController],
             providers: [app_service_1.AppService]

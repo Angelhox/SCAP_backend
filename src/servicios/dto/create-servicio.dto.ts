@@ -1,13 +1,18 @@
 import { Transform } from 'class-transformer';
 import {
   IsDateString,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
-
+enum IsBase {
+  'Base' = 1,
+  'Otro' = 0,
+}
 export class CreateServicioDto {
   @IsString()
   @IsNotEmpty()
@@ -24,8 +29,8 @@ export class CreateServicioDto {
   @MaxLength(20)
   @Transform(({ value }) => value.trim())
   tipo: string;
-  @IsNumber()
   @IsNotEmpty()
+  @IsNumber()
   valor: number;
   @IsString()
   @IsNotEmpty()
@@ -49,4 +54,7 @@ export class CreateServicioDto {
   @IsNotEmpty()
   @Transform(({ value }) => value.trim())
   individualSn: string;
+  @IsOptional()
+  @IsEnum(IsBase)
+  base: number;
 }

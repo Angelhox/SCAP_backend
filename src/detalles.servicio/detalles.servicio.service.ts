@@ -1,19 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDetallesServicioDto } from './dto/create-detalles.servicio.dto';
 import { UpdateDetallesServicioDto } from './dto/update-detalles.servicio.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { DetallesServicio } from './entities/detalles.servicio.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DetallesServicioService {
+  constructor(
+    @InjectRepository(DetallesServicio)
+    private readonly detallesServicioRepository: Repository<DetallesServicio>,
+  ) {}
   create(createDetallesServicioDto: CreateDetallesServicioDto) {
     return 'This action adds a new detallesServicio';
   }
 
-  findAll() {
-    return `This action returns all detallesServicio`;
+  async findAll() {
+    return await this.detallesServicioRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} detallesServicio`;
+  async findAllByServicio(id: number) {
+    return await this.detallesServicioRepository.findOne({ where: { id } });
+  }
+  async findOne(id: number) {
+    return await this.detallesServicioRepository.findOne({ where: { id } });
   }
 
   update(id: number, updateDetallesServicioDto: UpdateDetallesServicioDto) {

@@ -18,6 +18,7 @@ export class ServiciosService {
   async create(createServicioDto: CreateServicioDto) {
     const { nombre } = createServicioDto;
     await this.validateNombreServicio(nombre);
+    createServicioDto.base = await this.isServicioBase();
     const newServicio = this.servicioRepository.create(createServicioDto);
     return await this.servicioRepository.save(newServicio);
   }
@@ -27,7 +28,12 @@ export class ServiciosService {
   }
 
   async findOne(id: number) {
+    console.log(':)');
     return await this.servicioRepository.findOneBy({ id });
+  }
+  async findServicioBase() {
+    const base = 1;
+    return await this.servicioRepository.findOne({ where: { base } });
   }
 
   async update(id: number, updateServicioDto: UpdateServicioDto) {
@@ -60,5 +66,12 @@ export class ServiciosService {
     if (nombre !== nombreFound) {
       await this.validateNombreServicio(nombre);
     }
+  }
+  private async isServicioBase() {
+    const othersServices = await this.servicioRepository.find();
+    if (othersServices.length > 0) {
+      return 0;
+    }
+    return 1;
   }
 }

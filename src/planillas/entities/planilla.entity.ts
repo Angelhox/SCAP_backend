@@ -1,3 +1,4 @@
+import { Contrato } from 'src/contratos/entities/contrato.entity';
 import { Medidor } from 'src/medidor/entities/medidor.entity';
 import {
   Column,
@@ -34,7 +35,11 @@ export class Planilla {
   tarifaValor: number;
   @Column({ type: 'char', length: 30, unique: true })
   codigo: string;
-  @ManyToOne(() => Medidor, (medidor) => medidor.planilla)
-  @JoinColumn({ name: 'medidoresId' })
-  medidor: Medidor;
+  // Cambio: 1
+  // @ManyToOne(() => Medidor, (medidor) => medidor.planilla)
+  // @JoinColumn({ name: 'medidoresId' })
+  // medidor: Medidor;
+  @ManyToOne(() => Contrato, (contrato) => contrato.planilla)
+  @JoinColumn({ name: 'contratosId' })
+  contrato: Contrato;
 }

@@ -55,20 +55,21 @@ var ServiciosService = /** @class */ (function () {
     }
     ServiciosService.prototype.create = function (createServicioDto) {
         return __awaiter(this, void 0, void 0, function () {
-            var nombre, servicioFound, newServicio;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var nombre, _a, newServicio;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         nombre = createServicioDto.nombre;
-                        return [4 /*yield*/, this.servicioRepository.findOneBy({ nombre: nombre })];
+                        return [4 /*yield*/, this.validateNombreServicio(nombre)];
                     case 1:
-                        servicioFound = _a.sent();
-                        if (servicioFound) {
-                            throw new common_1.BadRequestException('Ya existe un servicio con el nombre ' + nombre);
-                        }
+                        _b.sent();
+                        _a = createServicioDto;
+                        return [4 /*yield*/, this.isServicioBase()];
+                    case 2:
+                        _a.base = _b.sent();
                         newServicio = this.servicioRepository.create(createServicioDto);
                         return [4 /*yield*/, this.servicioRepository.save(newServicio)];
-                    case 2: return [2 /*return*/, _a.sent()];
+                    case 3: return [2 /*return*/, _b.sent()];
                 }
             });
         });
@@ -87,7 +88,22 @@ var ServiciosService = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.servicioRepository.findOneBy({ id: id })];
+                    case 0:
+                        console.log(':)');
+                        return [4 /*yield*/, this.servicioRepository.findOneBy({ id: id })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    ServiciosService.prototype.findServicioBase = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var base;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        base = 1;
+                        return [4 /*yield*/, this.servicioRepository.findOne({ where: { base: base } })];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -95,32 +111,91 @@ var ServiciosService = /** @class */ (function () {
     };
     ServiciosService.prototype.update = function (id, updateServicioDto) {
         return __awaiter(this, void 0, void 0, function () {
-            var servicioFound;
+            var nombre;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        servicioFound = this.servicioRepository.findOneBy({ id: id });
-                        if (!servicioFound) {
-                            throw new common_1.ConflictException('No se ha podido encontrar el servicio');
-                        }
+                        nombre = updateServicioDto.nombre;
+                        return [4 /*yield*/, this.validateUpdateNombreServicio(id, nombre)];
+                    case 1:
+                        _a.sent();
                         return [4 /*yield*/, this.servicioRepository.update(id, updateServicioDto)];
-                    case 1: return [2 /*return*/, _a.sent()];
+                    case 2: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
     ServiciosService.prototype.remove = function (id) {
         return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validateServicio(id)];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, this.servicioRepository["delete"]({ id: id })];
+                    case 2: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    ServiciosService.prototype.validateNombreServicio = function (nombre) {
+        return __awaiter(this, void 0, void 0, function () {
             var servicioFound;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        servicioFound = this.servicioRepository.findOneBy({ id: id });
-                        if (!servicioFound) {
-                            throw new common_1.ConflictException('No se ha podido encontrar el servicio');
+                    case 0: return [4 /*yield*/, this.servicioRepository.findOneBy({ nombre: nombre })];
+                    case 1:
+                        servicioFound = _a.sent();
+                        if (servicioFound) {
+                            throw new common_1.BadRequestException('Ya existe un servicio con el nombre ' + nombre);
                         }
-                        return [4 /*yield*/, this.servicioRepository["delete"]({ id: id })];
-                    case 1: return [2 /*return*/, _a.sent()];
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServiciosService.prototype.validateServicio = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var servicioFound;
+            return __generator(this, function (_a) {
+                servicioFound = this.servicioRepository.findOneBy({ id: id });
+                if (!servicioFound) {
+                    throw new common_1.ConflictException('No se ha podido encontrar el servicio');
+                }
+                return [2 /*return*/, servicioFound];
+            });
+        });
+    };
+    ServiciosService.prototype.validateUpdateNombreServicio = function (id, nombre) {
+        return __awaiter(this, void 0, void 0, function () {
+            var nombreFound;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validateServicio(id)];
+                    case 1:
+                        nombreFound = (_a.sent()).nombre;
+                        if (!(nombre !== nombreFound)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, this.validateNombreServicio(nombre)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServiciosService.prototype.isServicioBase = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var othersServices;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.servicioRepository.find()];
+                    case 1:
+                        othersServices = _a.sent();
+                        if (othersServices.length > 0) {
+                            return [2 /*return*/, 0];
+                        }
+                        return [2 /*return*/, 1];
                 }
             });
         });

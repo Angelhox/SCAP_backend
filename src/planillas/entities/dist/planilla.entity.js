@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 exports.__esModule = true;
 exports.Planilla = void 0;
-var medidor_entity_1 = require("src/medidor/entities/medidor.entity");
+var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
 var typeorm_1 = require("typeorm");
 var Planilla = /** @class */ (function () {
     function Planilla() {
@@ -46,9 +46,9 @@ var Planilla = /** @class */ (function () {
         typeorm_1.Column({ type: 'char', length: 30, unique: true })
     ], Planilla.prototype, "codigo");
     __decorate([
-        typeorm_1.ManyToOne(function () { return medidor_entity_1.Medidor; }, function (medidor) { return medidor.planilla; }),
-        typeorm_1.JoinColumn({ name: 'medidoresId' })
-    ], Planilla.prototype, "medidor");
+        typeorm_1.ManyToOne(function () { return contrato_entity_1.Contrato; }, function (contrato) { return contrato.planilla; }),
+        typeorm_1.JoinColumn({ name: 'contratosId' })
+    ], Planilla.prototype, "contrato");
     Planilla = __decorate([
         typeorm_1.Entity({ name: 'planillas' })
     ], Planilla);

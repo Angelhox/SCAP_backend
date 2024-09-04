@@ -21,6 +21,9 @@ var ServiciosController = /** @class */ (function () {
     ServiciosController.prototype.findAll = function () {
         return this.serviciosService.findAll();
     };
+    ServiciosController.prototype.findServicioBase = function () {
+        return this.serviciosService.findServicioBase();
+    };
     ServiciosController.prototype.findOne = function (id) {
         return this.serviciosService.findOne(+id);
     };
@@ -37,6 +40,9 @@ var ServiciosController = /** @class */ (function () {
     __decorate([
         common_1.Get()
     ], ServiciosController.prototype, "findAll");
+    __decorate([
+        common_1.Get('base')
+    ], ServiciosController.prototype, "findServicioBase");
     __decorate([
         common_1.Get(':id'),
         __param(0, common_1.Param('id'))

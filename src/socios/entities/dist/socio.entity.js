@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 exports.__esModule = true;
 exports.Socio = void 0;
 var estado_cuenta_entity_1 = require("src/estado.cuenta/entities/estado.cuenta.entity");
+var socio_contrato_entity_1 = require("src/socio.contrato/entities/socio.contrato.entity");
+var usuario_entity_1 = require("src/usuarios/entities/usuario.entity");
 var typeorm_1 = require("typeorm");
 var Socio = /** @class */ (function () {
     function Socio() {
@@ -78,8 +80,17 @@ var Socio = /** @class */ (function () {
         typeorm_1.Column({ type: 'varchar', length: 100, "default": 'Referencia' })
     ], Socio.prototype, "referencia");
     __decorate([
+        typeorm_1.DeleteDateColumn()
+    ], Socio.prototype, "deleteAt");
+    __decorate([
         typeorm_1.OneToMany(function () { return estado_cuenta_entity_1.EstadoCuenta; }, function (estadoCuenta) { return estadoCuenta.socio; })
     ], Socio.prototype, "estadoCuenta");
+    __decorate([
+        typeorm_1.OneToMany(function () { return usuario_entity_1.Usuario; }, function (usuario) { return usuario.socio; })
+    ], Socio.prototype, "usuario");
+    __decorate([
+        typeorm_1.OneToMany(function () { return socio_contrato_entity_1.SocioContrato; }, function (socioContrato) { return socioContrato.socio; })
+    ], Socio.prototype, "socioContrato");
     Socio = __decorate([
         typeorm_1.Entity({ name: 'socios' })
     ], Socio);

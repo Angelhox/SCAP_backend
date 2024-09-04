@@ -15,7 +15,7 @@ var RegisterDto = /** @class */ (function () {
     __decorate([
         class_validator_1.IsString(),
         class_validator_1.MinLength(10),
-        class_validator_1.MaxLength(20),
+        class_validator_1.MaxLength(255),
         class_transformer_1.Transform(function (_a) {
             var value = _a.value;
             return value.trim();

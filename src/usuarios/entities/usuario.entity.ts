@@ -17,7 +17,7 @@ export class Usuario {
   id: number;
   @Column({ type: 'varchar', length: 255 })
   usuario: string;
-  @Column({ type: 'varchar', length: 45, select: false })
+  @Column({ type: 'varchar', length: 255, select: false })
   clave: string;
   // En el modelo no se especifica un valor por defecto para este campo, pero se deberia tomar CURRENT_TIMESTAMP !!
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })

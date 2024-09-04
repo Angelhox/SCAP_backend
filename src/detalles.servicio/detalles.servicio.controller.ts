@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DetallesServicioService } from './detalles.servicio.service';
 import { CreateDetallesServicioDto } from './dto/create-detalles.servicio.dto';
 import { UpdateDetallesServicioDto } from './dto/update-detalles.servicio.dto';
 
 @Controller('detalles.servicio')
 export class DetallesServicioController {
-  constructor(private readonly detallesServicioService: DetallesServicioService) {}
+  constructor(
+    private readonly detallesServicioService: DetallesServicioService,
+  ) {}
 
   @Post()
   create(@Body() createDetallesServicioDto: CreateDetallesServicioDto) {
@@ -17,13 +27,20 @@ export class DetallesServicioController {
     return this.detallesServicioService.findAll();
   }
 
+  @Get('/servicio:id')
+  async findAllByServicio(@Param('id') id: string) {
+    return this.detallesServicioService.findAllByServicio(+id);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.detallesServicioService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDetallesServicioDto: UpdateDetallesServicioDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateDetallesServicioDto: UpdateDetallesServicioDto,
+  ) {
     return this.detallesServicioService.update(+id, updateDetallesServicioDto);
   }
 
