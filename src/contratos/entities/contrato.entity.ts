@@ -12,7 +12,7 @@ import { ServicioContratado } from 'src/servicio.contratado/entities/servicio.co
 import { Socio } from 'src/socios/entities/socio.entity';
 import { Planilla } from 'src/planillas/entities/planilla.entity';
 import { SocioContrato } from 'src/socio.contrato/entities/socio.contrato.entity';
-
+import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
 @Entity({ name: 'contratos' })
 export class Contrato {
   @Index({ unique: true })
@@ -55,6 +55,8 @@ export class Contrato {
   servicioContratado: ServicioContratado;
   @OneToMany(() => SocioContrato, (socioContrato) => socioContrato.contrato)
   socioContrato: SocioContrato;
+  @OneToMany(() => SectorContrato, (sectorContrato) => sectorContrato.contrato)
+  sectorContrato: SectorContrato;
   // Cambio 2
   // @ManyToOne(() => Socio, (socio) => socio.contrato, { eager: true })
   // @JoinColumn({ name: 'sociosId' })

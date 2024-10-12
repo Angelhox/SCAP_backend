@@ -80,6 +80,11 @@ var CreateContratoDto = /** @class */ (function () {
         class_validator_1.IsInt(),
         class_validator_1.Max(99999999999)
     ], CreateContratoDto.prototype, "serviciosCompartidos");
+    __decorate([
+        class_validator_1.IsNotEmpty(),
+        class_validator_1.IsInt(),
+        class_validator_1.Min(1)
+    ], CreateContratoDto.prototype, "sectoresId");
     return CreateContratoDto;
 }());
 exports.CreateContratoDto = CreateContratoDto;

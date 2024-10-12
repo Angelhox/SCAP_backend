@@ -28,6 +28,7 @@ var ContratosController = /** @class */ (function () {
         return this.contratosService.findOne(+id);
     };
     ContratosController.prototype.update = function (id, updateContratoDto) {
+        console.log('Updating?');
         return this.contratosService.update(+id, updateContratoDto);
     };
     ContratosController.prototype.remove = function (id) {

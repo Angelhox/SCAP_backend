@@ -65,6 +65,10 @@ export class CreateContratoDto {
   @IsInt()
   @Max(99999999999)
   serviciosCompartidos: number;
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  sectoresId: number;
   // Cambio 2
   // @IsNotEmpty()
   // @IsInt()

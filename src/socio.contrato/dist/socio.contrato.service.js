@@ -62,16 +62,20 @@ var typeorm_1 = require("@nestjs/typeorm");
 var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
 var socio_entity_1 = require("src/socios/entities/socio.entity");
 var socio_contrato_entity_1 = require("./entities/socio.contrato.entity");
+var sector_entity_1 = require("src/sector/entities/sector.entity");
+var sector_contrato_entity_1 = require("src/sector.contrato/entities/sector.contrato.entity");
 var SocioContratoService = /** @class */ (function () {
-    function SocioContratoService(contratoRepository, socioRepository, socioContratoRepository, dataSource) {
+    function SocioContratoService(contratoRepository, socioRepository, socioContratoRepository, sectorRepository, sectorContratoRepository, dataSource) {
         this.contratoRepository = contratoRepository;
         this.socioRepository = socioRepository;
         this.socioContratoRepository = socioContratoRepository;
+        this.sectorRepository = sectorRepository;
+        this.sectorContratoRepository = sectorContratoRepository;
         this.dataSource = dataSource;
     }
     SocioContratoService.prototype.create = function (createSocioContratoDto) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, socio, newContrato, savedContrato, newSocioContrato, error_1;
+            var queryRunner, socio, sector, newContrato, savedContrato, dataSectorContrato, newSectorContrato, newSocioContrato, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -87,33 +91,46 @@ var SocioContratoService = /** @class */ (function () {
                         return [4 /*yield*/, this.validateSocio(createSocioContratoDto.sociosId)];
                     case 3:
                         socio = _a.sent();
-                        _a.label = 4;
+                        return [4 /*yield*/, this.validateSector(createSocioContratoDto.contrato.sectoresId)];
                     case 4:
-                        _a.trys.push([4, 8, , 10]);
+                        sector = _a.sent();
+                        _a.label = 5;
+                    case 5:
+                        _a.trys.push([5, 10, , 12]);
                         newContrato = this.contratoRepository.create(createSocioContratoDto.contrato);
                         return [4 /*yield*/, queryRunner.manager.save(newContrato)];
-                    case 5:
+                    case 6:
                         savedContrato = _a.sent();
+                        dataSectorContrato = {
+                            codigo: savedContrato.codigo,
+                            fechaCreacion: savedContrato.fecha,
+                            estado: savedContrato.estado,
+                            fechaBaja: null
+                        };
+                        newSectorContrato = this.sectorContratoRepository.create(__assign(__assign({}, dataSectorContrato), { contrato: savedContrato, sector: sector }));
+                        return [4 /*yield*/, queryRunner.manager.save(newSectorContrato)];
+                    case 7:
+                        _a.sent();
                         newSocioContrato = this.socioContratoRepository.create(__assign(__assign({}, createSocioContratoDto), { socio: socio, contrato: savedContrato }));
                         return [4 /*yield*/, queryRunner.manager.save(newSocioContrato)];
-                    case 6:
+                    case 8:
                         _a.sent();
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 7: return [2 /*return*/, _a.sent()];
-                    case 8:
+                    case 9: return [2 /*return*/, _a.sent()];
+                    case 10:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 9:
+                    case 11:
                         _a.sent();
                         throw new common_1.BadRequestException('Error al crear socioContrato y contrato: ' + error_1.message);
-                    case 10: return [2 /*return*/];
+                    case 12: return [2 /*return*/];
                 }
             });
         });
     };
     SocioContratoService.prototype.findAll = function () {
         return this.socioContratoRepository.find({
-            relations: ['socio', 'contrato'],
+            relations: ['socio', 'contrato', 'contrato.sectorContrato.sector'],
             where: { estado: 'Activo' }
         });
     };
@@ -174,11 +191,29 @@ var SocioContratoService = /** @class */ (function () {
             });
         });
     };
+    SocioContratoService.prototype.validateSector = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sectorFound;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sectorRepository.findOneBy({ id: id })];
+                    case 1:
+                        sectorFound = _a.sent();
+                        if (!sectorFound) {
+                            throw new common_1.BadRequestException('Sector not found');
+                        }
+                        return [2 /*return*/, sectorFound];
+                }
+            });
+        });
+    };
     SocioContratoService = __decorate([
         common_1.Injectable(),
         __param(0, typeorm_1.InjectRepository(contrato_entity_1.Contrato)),
         __param(1, typeorm_1.InjectRepository(socio_entity_1.Socio)),
-        __param(2, typeorm_1.InjectRepository(socio_contrato_entity_1.SocioContrato))
+        __param(2, typeorm_1.InjectRepository(socio_contrato_entity_1.SocioContrato)),
+        __param(3, typeorm_1.InjectRepository(sector_entity_1.Sector)),
+        __param(4, typeorm_1.InjectRepository(sector_contrato_entity_1.SectorContrato))
     ], SocioContratoService);
     return SocioContratoService;
 }());

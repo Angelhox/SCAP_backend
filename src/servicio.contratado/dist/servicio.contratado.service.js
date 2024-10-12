@@ -75,24 +75,26 @@ var ServicioContratadoService = /** @class */ (function () {
     }
     ServicioContratadoService.prototype.create = function (createServicioContratadoDto) {
         return __awaiter(this, void 0, void 0, function () {
-            var contrato, servicio, descuento, newServicioContratado;
+            var contratoValido, servicioValido, descuento, newServicioContratado;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log('Para ingresar: ', createServicioContratadoDto);
                         return [4 /*yield*/, this.validateContrato(createServicioContratadoDto.contratosId)];
                     case 1:
-                        contrato = _a.sent();
+                        contratoValido = _a.sent();
                         return [4 /*yield*/, this.validateServicio(createServicioContratadoDto.serviciosId)];
                     case 2:
-                        servicio = _a.sent();
+                        servicioValido = _a.sent();
                         return [4 /*yield*/, this.validateDescuento(createServicioContratadoDto.descuentosId)];
                     case 3:
                         descuento = _a.sent();
-                        newServicioContratado = this.servicioContratadoRepository.create(__assign(__assign({}, createServicioContratadoDto), { tipoDescuento: descuento, contrato: contrato,
-                            servicio: servicio }));
+                        return [4 /*yield*/, this.validateContratado(contratoValido.id, servicioValido.id)];
+                    case 4:
+                        _a.sent();
+                        newServicioContratado = this.servicioContratadoRepository.create(__assign(__assign({}, createServicioContratadoDto), { tipoDescuento: descuento, contrato: contratoValido, servicio: servicioValido }));
                         return [4 /*yield*/, this.servicioContratadoRepository.save(newServicioContratado)];
-                    case 4: return [2 /*return*/, _a.sent()];
+                    case 5: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -120,35 +122,38 @@ var ServicioContratadoService = /** @class */ (function () {
                         return [4 /*yield*/, this.validateCodigoMedidor(createMedidorServicioContratado.medidor.codigo)];
                     case 5:
                         _a.sent();
-                        _a.label = 6;
+                        return [4 /*yield*/, this.validateContratado(contrato.id, servicio.id)];
                     case 6:
-                        _a.trys.push([6, 11, 13, 15]);
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
+                        _a.trys.push([7, 12, 14, 16]);
                         newMedidor = this.medidorRepository.create(__assign(__assign({}, createMedidorServicioContratado.medidor), { contrato: contrato }));
                         return [4 /*yield*/, queryRunner.manager.save(newMedidor)];
-                    case 7:
+                    case 8:
                         _a.sent();
                         newServicioContratado = this.servicioContratadoRepository.create(__assign(__assign({}, createMedidorServicioContratado), { contrato: contrato, tipoDescuento: descuento, servicio: servicio }));
                         return [4 /*yield*/, queryRunner.manager.save(newServicioContratado)];
-                    case 8:
+                    case 9:
                         _a.sent();
                         return [4 /*yield*/, queryRunner.manager.update(contrato_entity_1.Contrato, contrato.id, {
                                 medidorSn: 'Si'
                             })];
-                    case 9:
+                    case 10:
                         _a.sent();
                         return [4 /*yield*/, queryRunner.commitTransaction()];
-                    case 10: return [2 /*return*/, _a.sent()];
-                    case 11:
+                    case 11: return [2 /*return*/, _a.sent()];
+                    case 12:
                         error_1 = _a.sent();
                         return [4 /*yield*/, queryRunner.rollbackTransaction()];
-                    case 12:
+                    case 13:
                         _a.sent();
                         throw new common_1.BadRequestException('Error al crear el medidor y contratar el servicio: ' + error_1);
-                    case 13: return [4 /*yield*/, queryRunner.release()];
-                    case 14:
+                    case 14: return [4 /*yield*/, queryRunner.release()];
+                    case 15:
                         _a.sent();
                         return [7 /*endfinally*/];
-                    case 15: return [2 /*return*/];
+                    case 16: return [2 /*return*/];
                 }
             });
         });
@@ -206,10 +211,86 @@ var ServicioContratadoService = /** @class */ (function () {
         return "This action returns a #" + id + " servicioContratado";
     };
     ServicioContratadoService.prototype.update = function (id, updateServicioContratadoDto) {
-        return "This action updates a #" + id + " servicioContratado";
+        return __awaiter(this, void 0, void 0, function () {
+            var queryRunner, descuento, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryRunner = this.dataSource.createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect];
+                    case 1:
+                        _a.sent();
+                        queryRunner.startTransaction();
+                        console.log('Received to update: ', updateServicioContratadoDto);
+                        return [4 /*yield*/, this.validateDescuento(updateServicioContratadoDto.descuentosId)];
+                    case 2:
+                        descuento = _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 6, 8, 10]);
+                        return [4 /*yield*/, queryRunner.manager.update(servicio_contratado_entity_1.ServicioContratado, id, {
+                                estado: updateServicioContratadoDto.estado,
+                                fechaEmision: updateServicioContratadoDto.fechaEmision,
+                                valorIndividual: updateServicioContratadoDto.valorIndividual,
+                                numeroPagosIndividual: updateServicioContratadoDto.numeroPagosIndividual,
+                                valorPagosIndividual: updateServicioContratadoDto.valorPagosIndividual,
+                                descuentoValor: updateServicioContratadoDto.descuentoValor,
+                                tipoDescuento: descuento
+                            })];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 5: return [2 /*return*/, _a.sent()];
+                    case 6:
+                        error_2 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 7:
+                        _a.sent();
+                        throw new common_1.BadRequestException('Error al actualizar el servicio contratado: ', error_2);
+                    case 8: return [4 /*yield*/, queryRunner.release()];
+                    case 9:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 10: return [2 /*return*/];
+                }
+            });
+        });
     };
-    ServicioContratadoService.prototype.remove = function (id) {
-        return "This action removes a #" + id + " servicioContratado";
+    ServicioContratadoService.prototype.remove = function (contratadoId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryRunner, error_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryRunner = this.dataSource.createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        queryRunner.startTransaction();
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 5, 7, 9]);
+                        return [4 /*yield*/, queryRunner.manager.update(servicio_contratado_entity_1.ServicioContratado, contratadoId, {
+                                estado: 'Inactivo'
+                            })];
+                    case 3:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 4: return [2 /*return*/, _a.sent()];
+                    case 5:
+                        error_3 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 6:
+                        _a.sent();
+                        throw new common_1.BadRequestException('Error al descontratar el servicio: ' + error_3);
+                    case 7: return [4 /*yield*/, queryRunner.release()];
+                    case 8:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 9: return [2 /*return*/];
+                }
+            });
+        });
     };
     ServicioContratadoService.prototype.validateServicio = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -271,6 +352,27 @@ var ServicioContratadoService = /** @class */ (function () {
                         medidorFound = _a.sent();
                         if (medidorFound) {
                             throw new common_1.BadRequestException('Ya existe un medidor con código: ', codigo);
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServicioContratadoService.prototype.validateContratado = function (contratoId, servicioId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var contratado;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.servicioContratadoRepository.findOne({
+                            where: {
+                                contrato: { id: contratoId },
+                                servicio: { id: servicioId }
+                            }
+                        })];
+                    case 1:
+                        contratado = _a.sent();
+                        if (contratado) {
+                            throw new common_1.BadRequestException('Este servicio ya ha sido contratado');
                         }
                         return [2 /*return*/];
                 }

@@ -14,12 +14,22 @@ var typeorm_1 = require("@nestjs/typeorm");
 var socio_contrato_entity_1 = require("./entities/socio.contrato.entity");
 var socio_entity_1 = require("src/socios/entities/socio.entity");
 var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
+var sector_entity_1 = require("src/sector/entities/sector.entity");
+var sector_contrato_entity_1 = require("src/sector.contrato/entities/sector.contrato.entity");
 var SocioContratoModule = /** @class */ (function () {
     function SocioContratoModule() {
     }
     SocioContratoModule = __decorate([
         common_1.Module({
-            imports: [typeorm_1.TypeOrmModule.forFeature([socio_contrato_entity_1.SocioContrato, socio_entity_1.Socio, contrato_entity_1.Contrato])],
+            imports: [
+                typeorm_1.TypeOrmModule.forFeature([
+                    socio_contrato_entity_1.SocioContrato,
+                    socio_entity_1.Socio,
+                    contrato_entity_1.Contrato,
+                    sector_entity_1.Sector,
+                    sector_contrato_entity_1.SectorContrato,
+                ]),
+            ],
             controllers: [socio_contrato_controller_1.SocioContratoController],
             providers: [socio_contrato_service_1.SocioContratoService]
         })

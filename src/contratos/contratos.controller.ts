@@ -39,6 +39,7 @@ export class ContratosController {
     @Param('id') id: string,
     @Body() updateContratoDto: UpdateContratoDto,
   ) {
+    console.log('Updating?');
     return this.contratosService.update(+id, updateContratoDto);
   }
 

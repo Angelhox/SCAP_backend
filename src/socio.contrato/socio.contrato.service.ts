@@ -6,6 +6,9 @@ import { Contrato } from 'src/contratos/entities/contrato.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Socio } from 'src/socios/entities/socio.entity';
 import { SocioContrato } from './entities/socio.contrato.entity';
+import { Sector } from 'src/sector/entities/sector.entity';
+import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
+import { CreateSectorContratoDto } from 'src/sector.contrato/dto/create-sector.contrato.dto';
 
 @Injectable()
 export class SocioContratoService {
@@ -16,6 +19,10 @@ export class SocioContratoService {
     private readonly socioRepository: Repository<Socio>,
     @InjectRepository(SocioContrato)
     private readonly socioContratoRepository: Repository<SocioContrato>,
+    @InjectRepository(Sector)
+    private readonly sectorRepository: Repository<Sector>,
+    @InjectRepository(SectorContrato)
+    private readonly sectorContratoRepository: Repository<SectorContrato>,
     private dataSource: DataSource,
   ) {}
   async create(createSocioContratoDto: CreateSocioContratoDto) {
@@ -25,11 +32,26 @@ export class SocioContratoService {
     queryRunner.startTransaction();
     await this.validateCodigoContrato(createSocioContratoDto.contrato.codigo);
     const socio = await this.validateSocio(createSocioContratoDto.sociosId);
+    const sector = await this.validateSector(
+      createSocioContratoDto.contrato.sectoresId,
+    );
     try {
       const newContrato = this.contratoRepository.create(
         createSocioContratoDto.contrato,
       );
       const savedContrato = await queryRunner.manager.save(newContrato);
+      const dataSectorContrato: CreateSectorContratoDto = {
+        codigo: savedContrato.codigo,
+        fechaCreacion: savedContrato.fecha,
+        estado: savedContrato.estado,
+        fechaBaja: null,
+      };
+      const newSectorContrato = this.sectorContratoRepository.create({
+        ...dataSectorContrato,
+        contrato: savedContrato,
+        sector: sector,
+      });
+      await queryRunner.manager.save(newSectorContrato);
       const newSocioContrato = this.socioContratoRepository.create({
         ...createSocioContratoDto,
         socio: socio,
@@ -47,7 +69,7 @@ export class SocioContratoService {
 
   findAll() {
     return this.socioContratoRepository.find({
-      relations: ['socio', 'contrato'],
+      relations: ['socio', 'contrato', 'contrato.sectorContrato.sector'],
       where: { estado: 'Activo' },
     });
   }
@@ -84,5 +106,12 @@ export class SocioContratoService {
         `Ya existe un contrato con código ${codigo}`,
       );
     }
+  }
+  private async validateSector(id: number) {
+    const sectorFound = await this.sectorRepository.findOneBy({ id });
+    if (!sectorFound) {
+      throw new BadRequestException('Sector not found');
+    }
+    return sectorFound;
   }
 }

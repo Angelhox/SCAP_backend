@@ -29,20 +29,21 @@ export class ServicioContratadoService {
   ) {}
   async create(createServicioContratadoDto: CreateServicioContratadoDto) {
     console.log('Para ingresar: ', createServicioContratadoDto);
-    const contrato = await this.validateContrato(
+    const contratoValido = await this.validateContrato(
       createServicioContratadoDto.contratosId,
     );
-    const servicio = await this.validateServicio(
+    const servicioValido = await this.validateServicio(
       createServicioContratadoDto.serviciosId,
     );
     const descuento = await this.validateDescuento(
       createServicioContratadoDto.descuentosId,
     );
+    await this.validateContratado(contratoValido.id, servicioValido.id);
     const newServicioContratado = this.servicioContratadoRepository.create({
       ...createServicioContratadoDto,
       tipoDescuento: descuento,
-      contrato,
-      servicio,
+      contrato: contratoValido,
+      servicio: servicioValido,
     });
     return await this.servicioContratadoRepository.save(newServicioContratado);
   }
@@ -64,6 +65,7 @@ export class ServicioContratadoService {
     await this.validateCodigoMedidor(
       createMedidorServicioContratado.medidor.codigo,
     );
+    await this.validateContratado(contrato.id, servicio.id);
     try {
       const newMedidor = this.medidorRepository.create({
         ...createMedidorServicioContratado.medidor,
@@ -122,12 +124,58 @@ export class ServicioContratadoService {
     return `This action returns a #${id} servicioContratado`;
   }
 
-  update(id: number, updateServicioContratadoDto: UpdateServicioContratadoDto) {
-    return `This action updates a #${id} servicioContratado`;
+  async update(
+    id: number,
+    updateServicioContratadoDto: UpdateServicioContratadoDto,
+  ) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect;
+    queryRunner.startTransaction();
+    console.log('Received to update: ', updateServicioContratadoDto);
+    const descuento = await this.validateDescuento(
+      updateServicioContratadoDto.descuentosId,
+    );
+    try {
+      await queryRunner.manager.update(ServicioContratado, id, {
+        estado: updateServicioContratadoDto.estado,
+        fechaEmision: updateServicioContratadoDto.fechaEmision,
+        valorIndividual: updateServicioContratadoDto.valorIndividual,
+        numeroPagosIndividual:
+          updateServicioContratadoDto.numeroPagosIndividual,
+        valorPagosIndividual: updateServicioContratadoDto.valorPagosIndividual,
+        descuentoValor: updateServicioContratadoDto.descuentoValor,
+        tipoDescuento: descuento,
+      });
+      return await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(
+        'Error al actualizar el servicio contratado: ',
+        error,
+      );
+    } finally {
+      await queryRunner.release();
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} servicioContratado`;
+  async remove(contratadoId: number) {
+    // return `This action removes a #${id} servicioContratado`;
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.update(ServicioContratado, contratadoId, {
+        estado: 'Inactivo',
+      });
+      return await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(
+        'Error al descontratar el servicio: ' + error,
+      );
+    } finally {
+      await queryRunner.release();
+    }
   }
   private async validateServicio(id: number) {
     const servicioEntity = await this.servicioRepository.findOneBy({ id });
@@ -159,6 +207,17 @@ export class ServicioContratadoService {
         'Ya existe un medidor con código: ',
         codigo,
       );
+    }
+  }
+  private async validateContratado(contratoId: number, servicioId: number) {
+    const contratado = await this.servicioContratadoRepository.findOne({
+      where: {
+        contrato: { id: contratoId },
+        servicio: { id: servicioId },
+      },
+    });
+    if (contratado) {
+      throw new BadRequestException('Este servicio ya ha sido contratado');
     }
   }
 }

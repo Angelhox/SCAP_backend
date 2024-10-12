@@ -1,4 +1,11 @@
-import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'sectores' })
 export class Sector {
@@ -14,4 +21,8 @@ export class Sector {
   codigo: string;
   @Column({ type: 'char', length: 10 })
   numeroSocios: number;
+  @Column({ type: 'char', length: 10 })
+  numeroCodigos: number;
+  @OneToMany(() => SectorContrato, (sectorContrato) => sectorContrato.sector)
+  sectorContrato: SectorContrato;
 }

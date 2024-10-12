@@ -34,6 +34,7 @@ var config_1 = require("@nestjs/config");
 var empleado_usuario_module_1 = require("./empleado.usuario/empleado.usuario.module");
 var contrato_medidor_module_1 = require("./contrato.medidor/contrato.medidor.module");
 var socio_contrato_module_1 = require("./socio.contrato/socio.contrato.module");
+var sector_contrato_module_1 = require("./sector.contrato/sector.contrato.module");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -83,6 +84,7 @@ var AppModule = /** @class */ (function () {
                 empleado_usuario_module_1.EmpleadoUsuarioModule,
                 contrato_medidor_module_1.ContratoMedidorModule,
                 socio_contrato_module_1.SocioContratoModule,
+                sector_contrato_module_1.SectorContratoModule,
             ],
             controllers: [app_controller_1.AppController],
             providers: [app_service_1.AppService]
