@@ -33,6 +33,9 @@ var ServicioContratadoController = /** @class */ (function () {
     ServicioContratadoController.prototype.update = function (id, updateServicioContratadoDto) {
         return this.servicioContratadoService.update(+id, updateServicioContratadoDto);
     };
+    ServicioContratadoController.prototype.removeWithMedidor = function (id, contratoId) {
+        return this.servicioContratadoService.removeWithMedidor(+id, +contratoId);
+    };
     ServicioContratadoController.prototype.remove = function (id) {
         return this.servicioContratadoService.remove(+id);
     };
@@ -60,6 +63,11 @@ var ServicioContratadoController = /** @class */ (function () {
         __param(0, common_1.Param('id')),
         __param(1, common_1.Body())
     ], ServicioContratadoController.prototype, "update");
+    __decorate([
+        common_1.Delete('/medidor/:id/:contratoId'),
+        __param(0, common_1.Param('id')),
+        __param(1, common_1.Param('contratoId'))
+    ], ServicioContratadoController.prototype, "removeWithMedidor");
     __decorate([
         common_1.Delete(':id'),
         __param(0, common_1.Param('id'))

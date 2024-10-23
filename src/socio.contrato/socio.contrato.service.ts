@@ -1,5 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateSocioContratoDto } from './dto/create-socio.contrato.dto';
+import {
+  CreateSocioContratoDto,
+  CreateSocioContratoWithContratoDto,
+} from './dto/create-socio.contrato.dto';
 import { UpdateSocioContratoDto } from './dto/update-socio.contrato.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Contrato } from 'src/contratos/entities/contrato.entity';
@@ -7,8 +10,6 @@ import { DataSource, Repository } from 'typeorm';
 import { Socio } from 'src/socios/entities/socio.entity';
 import { SocioContrato } from './entities/socio.contrato.entity';
 import { Sector } from 'src/sector/entities/sector.entity';
-import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
-import { CreateSectorContratoDto } from 'src/sector.contrato/dto/create-sector.contrato.dto';
 
 @Injectable()
 export class SocioContratoService {
@@ -21,39 +22,36 @@ export class SocioContratoService {
     private readonly socioContratoRepository: Repository<SocioContrato>,
     @InjectRepository(Sector)
     private readonly sectorRepository: Repository<Sector>,
-    @InjectRepository(SectorContrato)
-    private readonly sectorContratoRepository: Repository<SectorContrato>,
     private dataSource: DataSource,
   ) {}
-  async create(createSocioContratoDto: CreateSocioContratoDto) {
-    console.log('Recibido: ', createSocioContratoDto);
+  async create(
+    createSocioContratoWithContratoDto: CreateSocioContratoWithContratoDto,
+  ) {
+    console.log('Recibido: ', createSocioContratoWithContratoDto);
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     queryRunner.startTransaction();
-    await this.validateCodigoContrato(createSocioContratoDto.contrato.codigo);
-    const socio = await this.validateSocio(createSocioContratoDto.sociosId);
+    await this.validateCodigoContrato(
+      createSocioContratoWithContratoDto.contrato.codigo,
+    );
+    const socio = await this.validateSocio(
+      createSocioContratoWithContratoDto.sociosId,
+    );
     const sector = await this.validateSector(
-      createSocioContratoDto.contrato.sectoresId,
+      createSocioContratoWithContratoDto.contrato.sectoresId,
     );
     try {
-      const newContrato = this.contratoRepository.create(
-        createSocioContratoDto.contrato,
-      );
-      const savedContrato = await queryRunner.manager.save(newContrato);
-      const dataSectorContrato: CreateSectorContratoDto = {
-        codigo: savedContrato.codigo,
-        fechaCreacion: savedContrato.fecha,
-        estado: savedContrato.estado,
-        fechaBaja: null,
-      };
-      const newSectorContrato = this.sectorContratoRepository.create({
-        ...dataSectorContrato,
-        contrato: savedContrato,
-        sector: sector,
+      const newContrato = this.contratoRepository.create({
+        ...createSocioContratoWithContratoDto.contrato,
+        sector,
       });
-      await queryRunner.manager.save(newSectorContrato);
+      await queryRunner.manager.update(Sector, sector.id, {
+        numeroSocios: () => 'numeroSocios +1',
+        numeroCodigos: () => 'numeroCodigos +1',
+      });
+      const savedContrato = await queryRunner.manager.save(newContrato);
       const newSocioContrato = this.socioContratoRepository.create({
-        ...createSocioContratoDto,
+        ...createSocioContratoWithContratoDto,
         socio: socio,
         contrato: savedContrato,
       });
@@ -69,13 +67,20 @@ export class SocioContratoService {
 
   findAll() {
     return this.socioContratoRepository.find({
-      relations: ['socio', 'contrato', 'contrato.sectorContrato.sector'],
+      relations: ['socio', 'contrato'],
       where: { estado: 'Activo' },
     });
   }
 
+  async findByContrato(contratoId: number) {
+    return await this.socioContratoRepository.findOne({
+      where: { contrato: { id: contratoId }, estado: 'Activo' },
+      relations: ['contrato'],
+    });
+  }
   async findBySocio(socioId: number) {
-    await this.validateSocio(socioId);
+    // No es necesario validar ?
+    // await this.validateSocio(socioId);
     return await this.socioContratoRepository.find({
       where: { socio: { id: socioId }, estado: 'Activo' },
       relations: ['contrato'],
@@ -84,13 +89,47 @@ export class SocioContratoService {
   findOne(id: number) {
     return `This action returns a #${id} socioContrato`;
   }
-
+  async updateSocio(id: number, socioContratoDto: CreateSocioContratoDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    queryRunner.startTransaction();
+    const socio = await this.validateSocio(socioContratoDto.sociosId);
+    const contrato = await this.validateContrato(socioContratoDto.contratosId);
+    try {
+      const newSocioContrato = this.socioContratoRepository.create({
+        ...socioContratoDto,
+        socio,
+        contrato,
+      });
+      await queryRunner.manager.save(newSocioContrato);
+      await queryRunner.manager.update(SocioContrato, id, {
+        fechaBaja: socioContratoDto.fechaContratacion,
+        estado: 'Inactivo',
+      });
+      return await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(
+        'Error al actualizar el socio del contrato: ',
+        error,
+      );
+    } finally {
+      await queryRunner.release();
+    }
+  }
   update(id: number, updateSocioContratoDto: UpdateSocioContratoDto) {
     return `This action updates a #${id} socioContrato`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} socioContrato`;
+  }
+  private async validateContrato(id: number) {
+    const contratoFound = await this.contratoRepository.findOneBy({ id });
+    if (!contratoFound) {
+      throw new BadRequestException('Contrato not found');
+    }
+    return contratoFound;
   }
   private async validateSocio(id: number) {
     const socioEntity = await this.socioRepository.findOneBy({ id: id });

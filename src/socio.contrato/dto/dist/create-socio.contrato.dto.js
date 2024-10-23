@@ -19,41 +19,47 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 exports.__esModule = true;
-exports.CreateSocioContratoDto = exports.socioContratoDto = void 0;
+exports.CreateSocioContratoWithContratoDto = exports.CreateSocioContratoDto = void 0;
 var class_validator_1 = require("class-validator");
 var enumActivo;
 (function (enumActivo) {
     enumActivo["Activo"] = "Activo";
     enumActivo["Inactivo"] = "Inactivo";
 })(enumActivo || (enumActivo = {}));
-var socioContratoDto = /** @class */ (function () {
-    function socioContratoDto() {
+var CreateSocioContratoDto = /** @class */ (function () {
+    function CreateSocioContratoDto() {
     }
     __decorate([
         class_validator_1.IsDateString()
-    ], socioContratoDto.prototype, "fechaContratacion");
+    ], CreateSocioContratoDto.prototype, "fechaContratacion");
     __decorate([
         class_validator_1.IsOptional(),
         class_validator_1.IsDateString()
-    ], socioContratoDto.prototype, "fechaBaja");
+    ], CreateSocioContratoDto.prototype, "fechaBaja");
     __decorate([
         class_validator_1.IsNotEmpty(),
         class_validator_1.IsString(),
         class_validator_1.IsEnum(enumActivo)
-    ], socioContratoDto.prototype, "estado");
+    ], CreateSocioContratoDto.prototype, "estado");
     __decorate([
         class_validator_1.IsNotEmpty(),
         class_validator_1.IsInt(),
         class_validator_1.Min(1)
-    ], socioContratoDto.prototype, "sociosId");
-    return socioContratoDto;
+    ], CreateSocioContratoDto.prototype, "sociosId");
+    __decorate([
+        class_validator_1.IsOptional(),
+        class_validator_1.IsNotEmpty(),
+        class_validator_1.IsInt(),
+        class_validator_1.Min(1)
+    ], CreateSocioContratoDto.prototype, "contratosId");
+    return CreateSocioContratoDto;
 }());
-exports.socioContratoDto = socioContratoDto;
-var CreateSocioContratoDto = /** @class */ (function (_super) {
-    __extends(CreateSocioContratoDto, _super);
-    function CreateSocioContratoDto() {
+exports.CreateSocioContratoDto = CreateSocioContratoDto;
+var CreateSocioContratoWithContratoDto = /** @class */ (function (_super) {
+    __extends(CreateSocioContratoWithContratoDto, _super);
+    function CreateSocioContratoWithContratoDto() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    return CreateSocioContratoDto;
-}(socioContratoDto));
-exports.CreateSocioContratoDto = CreateSocioContratoDto;
+    return CreateSocioContratoWithContratoDto;
+}(CreateSocioContratoDto));
+exports.CreateSocioContratoWithContratoDto = CreateSocioContratoWithContratoDto;

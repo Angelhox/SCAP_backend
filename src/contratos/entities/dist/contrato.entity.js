@@ -12,7 +12,7 @@ var medidor_entity_1 = require("src/medidor/entities/medidor.entity");
 var servicio_contratado_entity_1 = require("src/servicio.contratado/entities/servicio.contratado.entity");
 var planilla_entity_1 = require("src/planillas/entities/planilla.entity");
 var socio_contrato_entity_1 = require("src/socio.contrato/entities/socio.contrato.entity");
-var sector_contrato_entity_1 = require("src/sector.contrato/entities/sector.contrato.entity");
+var sector_entity_1 = require("src/sector/entities/sector.entity");
 var Contrato = /** @class */ (function () {
     function Contrato() {
     }
@@ -66,8 +66,9 @@ var Contrato = /** @class */ (function () {
         typeorm_1.OneToMany(function () { return socio_contrato_entity_1.SocioContrato; }, function (socioContrato) { return socioContrato.contrato; })
     ], Contrato.prototype, "socioContrato");
     __decorate([
-        typeorm_1.OneToMany(function () { return sector_contrato_entity_1.SectorContrato; }, function (sectorContrato) { return sectorContrato.contrato; })
-    ], Contrato.prototype, "sectorContrato");
+        typeorm_1.ManyToOne(function () { return sector_entity_1.Sector; }, function (sector) { return sector.contrato; }, { eager: true }),
+        typeorm_1.JoinColumn({ name: 'sectoresId' })
+    ], Contrato.prototype, "sector");
     Contrato = __decorate([
         typeorm_1.Entity({ name: 'contratos' })
     ], Contrato);

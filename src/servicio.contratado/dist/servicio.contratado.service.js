@@ -105,6 +105,7 @@ var ServicioContratadoService = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        console.log('Ingresar servicio y medidor: ', createMedidorServicioContratado);
                         queryRunner = this.dataSource.createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
@@ -288,6 +289,50 @@ var ServicioContratadoService = /** @class */ (function () {
                         _a.sent();
                         return [7 /*endfinally*/];
                     case 9: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServicioContratadoService.prototype.removeWithMedidor = function (contratadoId, contratoId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryRunner, contrato, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryRunner = this.dataSource.createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        queryRunner.startTransaction();
+                        return [4 /*yield*/, this.validateContrato(contratoId)];
+                    case 2:
+                        contrato = _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _a.trys.push([3, 7, 9, 11]);
+                        return [4 /*yield*/, queryRunner.manager.update(medidor_entity_1.Medidor, { contrato: contrato, estado: 'Activo' }, {
+                                estado: 'Inactivo'
+                            })];
+                    case 4:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.update(servicio_contratado_entity_1.ServicioContratado, contratadoId, {
+                                estado: 'Inactivo'
+                            })];
+                    case 5:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 6: return [2 /*return*/, _a.sent()];
+                    case 7:
+                        error_4 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 8:
+                        _a.sent();
+                        throw new common_1.BadRequestException('Error al descontratar el servicio: ' + error_4);
+                    case 9: return [4 /*yield*/, queryRunner.release()];
+                    case 10:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 11: return [2 /*return*/];
                 }
             });
         });

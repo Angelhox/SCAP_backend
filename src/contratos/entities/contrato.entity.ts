@@ -9,10 +9,9 @@ import {
 } from 'typeorm';
 import { Medidor } from 'src/medidor/entities/medidor.entity';
 import { ServicioContratado } from 'src/servicio.contratado/entities/servicio.contratado.entity';
-import { Socio } from 'src/socios/entities/socio.entity';
 import { Planilla } from 'src/planillas/entities/planilla.entity';
 import { SocioContrato } from 'src/socio.contrato/entities/socio.contrato.entity';
-import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
+import { Sector } from 'src/sector/entities/sector.entity';
 @Entity({ name: 'contratos' })
 export class Contrato {
   @Index({ unique: true })
@@ -55,8 +54,9 @@ export class Contrato {
   servicioContratado: ServicioContratado;
   @OneToMany(() => SocioContrato, (socioContrato) => socioContrato.contrato)
   socioContrato: SocioContrato;
-  @OneToMany(() => SectorContrato, (sectorContrato) => sectorContrato.contrato)
-  sectorContrato: SectorContrato;
+  @ManyToOne(() => Sector, (sector) => sector.contrato, { eager: true })
+  @JoinColumn({ name: 'sectoresId' })
+  sector: Sector;
   // Cambio 2
   // @ManyToOne(() => Socio, (socio) => socio.contrato, { eager: true })
   // @JoinColumn({ name: 'sociosId' })

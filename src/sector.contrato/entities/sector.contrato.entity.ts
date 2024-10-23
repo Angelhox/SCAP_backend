@@ -22,10 +22,10 @@ export class SectorContrato {
   fechaCreacion: Date;
   @Column({ type: 'date', nullable: true, default: null })
   fechaBaja: Date;
-  @ManyToOne(() => Contrato, (contrato) => contrato.sectorContrato)
-  @JoinColumn({ name: 'contratosId' })
-  contrato: Contrato;
-  @ManyToOne(() => Sector, (sector) => sector.sectorContrato)
-  @JoinColumn({ name: 'sectoresId' })
-  sector: Sector;
+  // @ManyToOne(() => Contrato, (contrato) => contrato.sectorContrato)
+  // @JoinColumn({ name: 'contratosId' })
+  // contrato: Contrato;
+  // @ManyToOne(() => Sector, (sector) => sector.sectorContrato)
+  // @JoinColumn({ name: 'sectoresId' })
+  // sector: Sector;
 }

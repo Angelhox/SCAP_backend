@@ -63,55 +63,49 @@ var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
 var socio_entity_1 = require("src/socios/entities/socio.entity");
 var socio_contrato_entity_1 = require("./entities/socio.contrato.entity");
 var sector_entity_1 = require("src/sector/entities/sector.entity");
-var sector_contrato_entity_1 = require("src/sector.contrato/entities/sector.contrato.entity");
 var SocioContratoService = /** @class */ (function () {
-    function SocioContratoService(contratoRepository, socioRepository, socioContratoRepository, sectorRepository, sectorContratoRepository, dataSource) {
+    function SocioContratoService(contratoRepository, socioRepository, socioContratoRepository, sectorRepository, dataSource) {
         this.contratoRepository = contratoRepository;
         this.socioRepository = socioRepository;
         this.socioContratoRepository = socioContratoRepository;
         this.sectorRepository = sectorRepository;
-        this.sectorContratoRepository = sectorContratoRepository;
         this.dataSource = dataSource;
     }
-    SocioContratoService.prototype.create = function (createSocioContratoDto) {
+    SocioContratoService.prototype.create = function (createSocioContratoWithContratoDto) {
         return __awaiter(this, void 0, void 0, function () {
-            var queryRunner, socio, sector, newContrato, savedContrato, dataSectorContrato, newSectorContrato, newSocioContrato, error_1;
+            var queryRunner, socio, sector, newContrato, savedContrato, newSocioContrato, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('Recibido: ', createSocioContratoDto);
+                        console.log('Recibido: ', createSocioContratoWithContratoDto);
                         queryRunner = this.dataSource.createQueryRunner();
                         return [4 /*yield*/, queryRunner.connect()];
                     case 1:
                         _a.sent();
                         queryRunner.startTransaction();
-                        return [4 /*yield*/, this.validateCodigoContrato(createSocioContratoDto.contrato.codigo)];
+                        return [4 /*yield*/, this.validateCodigoContrato(createSocioContratoWithContratoDto.contrato.codigo)];
                     case 2:
                         _a.sent();
-                        return [4 /*yield*/, this.validateSocio(createSocioContratoDto.sociosId)];
+                        return [4 /*yield*/, this.validateSocio(createSocioContratoWithContratoDto.sociosId)];
                     case 3:
                         socio = _a.sent();
-                        return [4 /*yield*/, this.validateSector(createSocioContratoDto.contrato.sectoresId)];
+                        return [4 /*yield*/, this.validateSector(createSocioContratoWithContratoDto.contrato.sectoresId)];
                     case 4:
                         sector = _a.sent();
                         _a.label = 5;
                     case 5:
                         _a.trys.push([5, 10, , 12]);
-                        newContrato = this.contratoRepository.create(createSocioContratoDto.contrato);
-                        return [4 /*yield*/, queryRunner.manager.save(newContrato)];
+                        newContrato = this.contratoRepository.create(__assign(__assign({}, createSocioContratoWithContratoDto.contrato), { sector: sector }));
+                        return [4 /*yield*/, queryRunner.manager.update(sector_entity_1.Sector, sector.id, {
+                                numeroSocios: function () { return 'numeroSocios +1'; },
+                                numeroCodigos: function () { return 'numeroCodigos +1'; }
+                            })];
                     case 6:
-                        savedContrato = _a.sent();
-                        dataSectorContrato = {
-                            codigo: savedContrato.codigo,
-                            fechaCreacion: savedContrato.fecha,
-                            estado: savedContrato.estado,
-                            fechaBaja: null
-                        };
-                        newSectorContrato = this.sectorContratoRepository.create(__assign(__assign({}, dataSectorContrato), { contrato: savedContrato, sector: sector }));
-                        return [4 /*yield*/, queryRunner.manager.save(newSectorContrato)];
-                    case 7:
                         _a.sent();
-                        newSocioContrato = this.socioContratoRepository.create(__assign(__assign({}, createSocioContratoDto), { socio: socio, contrato: savedContrato }));
+                        return [4 /*yield*/, queryRunner.manager.save(newContrato)];
+                    case 7:
+                        savedContrato = _a.sent();
+                        newSocioContrato = this.socioContratoRepository.create(__assign(__assign({}, createSocioContratoWithContratoDto), { socio: socio, contrato: savedContrato }));
                         return [4 /*yield*/, queryRunner.manager.save(newSocioContrato)];
                     case 8:
                         _a.sent();
@@ -130,22 +124,35 @@ var SocioContratoService = /** @class */ (function () {
     };
     SocioContratoService.prototype.findAll = function () {
         return this.socioContratoRepository.find({
-            relations: ['socio', 'contrato', 'contrato.sectorContrato.sector'],
+            relations: ['socio', 'contrato'],
             where: { estado: 'Activo' }
+        });
+    };
+    SocioContratoService.prototype.findByContrato = function (contratoId) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.socioContratoRepository.findOne({
+                            where: { contrato: { id: contratoId }, estado: 'Activo' },
+                            relations: ['contrato']
+                        })];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
         });
     };
     SocioContratoService.prototype.findBySocio = function (socioId) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.validateSocio(socioId)];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, this.socioContratoRepository.find({
-                                where: { socio: { id: socioId }, estado: 'Activo' },
-                                relations: ['contrato']
-                            })];
-                    case 2: return [2 /*return*/, _a.sent()];
+                    case 0: return [4 /*yield*/, this.socioContratoRepository.find({
+                            where: { socio: { id: socioId }, estado: 'Activo' },
+                            relations: ['contrato']
+                        })];
+                    case 1: 
+                    // No es necesario validar ?
+                    // await this.validateSocio(socioId);
+                    return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -153,11 +160,75 @@ var SocioContratoService = /** @class */ (function () {
     SocioContratoService.prototype.findOne = function (id) {
         return "This action returns a #" + id + " socioContrato";
     };
+    SocioContratoService.prototype.updateSocio = function (id, socioContratoDto) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryRunner, socio, contrato, newSocioContrato, error_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryRunner = this.dataSource.createQueryRunner();
+                        return [4 /*yield*/, queryRunner.connect()];
+                    case 1:
+                        _a.sent();
+                        queryRunner.startTransaction();
+                        return [4 /*yield*/, this.validateSocio(socioContratoDto.sociosId)];
+                    case 2:
+                        socio = _a.sent();
+                        return [4 /*yield*/, this.validateContrato(socioContratoDto.contratosId)];
+                    case 3:
+                        contrato = _a.sent();
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 8, 10, 12]);
+                        newSocioContrato = this.socioContratoRepository.create(__assign(__assign({}, socioContratoDto), { socio: socio,
+                            contrato: contrato }));
+                        return [4 /*yield*/, queryRunner.manager.save(newSocioContrato)];
+                    case 5:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.update(socio_contrato_entity_1.SocioContrato, id, {
+                                fechaBaja: socioContratoDto.fechaContratacion,
+                                estado: 'Inactivo'
+                            })];
+                    case 6:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 7: return [2 /*return*/, _a.sent()];
+                    case 8:
+                        error_2 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 9:
+                        _a.sent();
+                        throw new common_1.BadRequestException('Error al actualizar el socio del contrato: ', error_2);
+                    case 10: return [4 /*yield*/, queryRunner.release()];
+                    case 11:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 12: return [2 /*return*/];
+                }
+            });
+        });
+    };
     SocioContratoService.prototype.update = function (id, updateSocioContratoDto) {
         return "This action updates a #" + id + " socioContrato";
     };
     SocioContratoService.prototype.remove = function (id) {
         return "This action removes a #" + id + " socioContrato";
+    };
+    SocioContratoService.prototype.validateContrato = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var contratoFound;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.contratoRepository.findOneBy({ id: id })];
+                    case 1:
+                        contratoFound = _a.sent();
+                        if (!contratoFound) {
+                            throw new common_1.BadRequestException('Contrato not found');
+                        }
+                        return [2 /*return*/, contratoFound];
+                }
+            });
+        });
     };
     SocioContratoService.prototype.validateSocio = function (id) {
         return __awaiter(this, void 0, void 0, function () {
@@ -212,8 +283,7 @@ var SocioContratoService = /** @class */ (function () {
         __param(0, typeorm_1.InjectRepository(contrato_entity_1.Contrato)),
         __param(1, typeorm_1.InjectRepository(socio_entity_1.Socio)),
         __param(2, typeorm_1.InjectRepository(socio_contrato_entity_1.SocioContrato)),
-        __param(3, typeorm_1.InjectRepository(sector_entity_1.Sector)),
-        __param(4, typeorm_1.InjectRepository(sector_contrato_entity_1.SectorContrato))
+        __param(3, typeorm_1.InjectRepository(sector_entity_1.Sector))
     ], SocioContratoService);
     return SocioContratoService;
 }());

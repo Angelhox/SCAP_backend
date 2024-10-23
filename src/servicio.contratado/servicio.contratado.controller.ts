@@ -57,6 +57,13 @@ export class ServicioContratadoController {
     );
   }
 
+  @Delete('/medidor/:id/:contratoId')
+  removeWithMedidor(
+    @Param('id') id: string,
+    @Param('contratoId') contratoId: string,
+  ) {
+    return this.servicioContratadoService.removeWithMedidor(+id, +contratoId);
+  }
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.servicioContratadoService.remove(+id);

@@ -10,14 +10,11 @@ exports.SectorContratoModule = void 0;
 var common_1 = require("@nestjs/common");
 var sector_contrato_service_1 = require("./sector.contrato.service");
 var sector_contrato_controller_1 = require("./sector.contrato.controller");
-var typeorm_1 = require("@nestjs/typeorm");
-var sector_contrato_entity_1 = require("./entities/sector.contrato.entity");
 var SectorContratoModule = /** @class */ (function () {
     function SectorContratoModule() {
     }
     SectorContratoModule = __decorate([
         common_1.Module({
-            imports: [typeorm_1.TypeOrmModule.forFeature([sector_contrato_entity_1.SectorContrato])],
             controllers: [sector_contrato_controller_1.SectorContratoController],
             providers: [sector_contrato_service_1.SectorContratoService]
         })

@@ -50,6 +50,10 @@ export class ServicioContratadoService {
   async createMedidorServicioContratado(
     createMedidorServicioContratado: CreateMedidorServicioContratadoDto,
   ) {
+    console.log(
+      'Ingresar servicio y medidor: ',
+      createMedidorServicioContratado,
+    );
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     queryRunner.startTransaction();
@@ -159,11 +163,36 @@ export class ServicioContratadoService {
   }
 
   async remove(contratadoId: number) {
-    // return `This action removes a #${id} servicioContratado`;
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     queryRunner.startTransaction();
     try {
+      await queryRunner.manager.update(ServicioContratado, contratadoId, {
+        estado: 'Inactivo',
+      });
+      return await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException(
+        'Error al descontratar el servicio: ' + error,
+      );
+    } finally {
+      await queryRunner.release();
+    }
+  }
+  async removeWithMedidor(contratadoId: number, contratoId: number) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    queryRunner.startTransaction();
+    const contrato = await this.validateContrato(contratoId);
+    try {
+      await queryRunner.manager.update(
+        Medidor,
+        { contrato, estado: 'Activo' },
+        {
+          estado: 'Inactivo',
+        },
+      );
       await queryRunner.manager.update(ServicioContratado, contratadoId, {
         estado: 'Inactivo',
       });

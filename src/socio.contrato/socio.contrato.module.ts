@@ -6,18 +6,9 @@ import { SocioContrato } from './entities/socio.contrato.entity';
 import { Socio } from 'src/socios/entities/socio.entity';
 import { Contrato } from 'src/contratos/entities/contrato.entity';
 import { Sector } from 'src/sector/entities/sector.entity';
-import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      SocioContrato,
-      Socio,
-      Contrato,
-      Sector,
-      SectorContrato,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([SocioContrato, Socio, Contrato, Sector])],
   controllers: [SocioContratoController],
   providers: [SocioContratoService],
 })

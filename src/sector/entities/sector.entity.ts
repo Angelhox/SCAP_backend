@@ -1,4 +1,4 @@
-import { SectorContrato } from 'src/sector.contrato/entities/sector.contrato.entity';
+import { Contrato } from 'src/contratos/entities/contrato.entity';
 import {
   Column,
   Entity,
@@ -23,6 +23,6 @@ export class Sector {
   numeroSocios: number;
   @Column({ type: 'char', length: 10 })
   numeroCodigos: number;
-  @OneToMany(() => SectorContrato, (sectorContrato) => sectorContrato.sector)
-  sectorContrato: SectorContrato;
+  @OneToMany(() => Contrato, (contrato) => contrato.sector)
+  contrato: Contrato;
 }

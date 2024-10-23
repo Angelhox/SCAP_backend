@@ -27,8 +27,14 @@ var ContratosController = /** @class */ (function () {
     ContratosController.prototype.findOne = function (id) {
         return this.contratosService.findOne(+id);
     };
+    ContratosController.prototype.updateSector = function (id, sectorId, updateContratoDto) {
+        console.log('Updating: ', updateContratoDto);
+        console.log('Con sector controller');
+        return this.contratosService.updateSector(+id, +sectorId, updateContratoDto);
+    };
     ContratosController.prototype.update = function (id, updateContratoDto) {
-        console.log('Updating?');
+        console.log('Updating: ', updateContratoDto);
+        console.log('Sin sector controller');
         return this.contratosService.update(+id, updateContratoDto);
     };
     ContratosController.prototype.remove = function (id) {
@@ -49,6 +55,12 @@ var ContratosController = /** @class */ (function () {
         common_1.Get(':id'),
         __param(0, common_1.Param('id'))
     ], ContratosController.prototype, "findOne");
+    __decorate([
+        common_1.Patch(':id/:sectorId'),
+        __param(0, common_1.Param('id')),
+        __param(1, common_1.Param('sectorId')),
+        __param(2, common_1.Body())
+    ], ContratosController.prototype, "updateSector");
     __decorate([
         common_1.Patch(':id'),
         __param(0, common_1.Param('id')),

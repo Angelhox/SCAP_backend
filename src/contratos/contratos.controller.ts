@@ -34,12 +34,27 @@ export class ContratosController {
     return this.contratosService.findOne(+id);
   }
 
+  @Patch(':id/:sectorId')
+  updateSector(
+    @Param('id') id: string,
+    @Param('sectorId') sectorId: string | null,
+    @Body() updateContratoDto: UpdateContratoDto,
+  ) {
+    console.log('Updating: ', updateContratoDto);
+    console.log('Con sector controller');
+    return this.contratosService.updateSector(
+      +id,
+      +sectorId,
+      updateContratoDto,
+    );
+  }
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateContratoDto: UpdateContratoDto,
   ) {
-    console.log('Updating?');
+    console.log('Updating: ', updateContratoDto);
+    console.log('Sin sector controller');
     return this.contratosService.update(+id, updateContratoDto);
   }
 

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 exports.__esModule = true;
 exports.Sector = void 0;
-var sector_contrato_entity_1 = require("src/sector.contrato/entities/sector.contrato.entity");
+var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
 var typeorm_1 = require("typeorm");
 var Sector = /** @class */ (function () {
     function Sector() {
@@ -32,8 +32,8 @@ var Sector = /** @class */ (function () {
         typeorm_1.Column({ type: 'char', length: 10 })
     ], Sector.prototype, "numeroCodigos");
     __decorate([
-        typeorm_1.OneToMany(function () { return sector_contrato_entity_1.SectorContrato; }, function (sectorContrato) { return sectorContrato.sector; })
-    ], Sector.prototype, "sectorContrato");
+        typeorm_1.OneToMany(function () { return contrato_entity_1.Contrato; }, function (contrato) { return contrato.sector; })
+    ], Sector.prototype, "contrato");
     Sector = __decorate([
         typeorm_1.Entity({ name: 'sectores' })
     ], Sector);

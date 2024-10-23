@@ -12,7 +12,7 @@ enum enumActivo {
   Activo = 'Activo',
   Inactivo = 'Inactivo',
 }
-export class socioContratoDto {
+export class CreateSocioContratoDto {
   @IsDateString()
   fechaContratacion: Date;
   @IsOptional()
@@ -26,7 +26,12 @@ export class socioContratoDto {
   @IsInt()
   @Min(1)
   sociosId: number;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsInt()
+  @Min(1)
+  contratosId: number;
 }
-export class CreateSocioContratoDto extends socioContratoDto {
+export class CreateSocioContratoWithContratoDto extends CreateSocioContratoDto {
   contrato: CreateContratoDto;
 }

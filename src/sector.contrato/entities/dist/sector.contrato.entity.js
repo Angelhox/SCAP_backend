@@ -7,8 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 exports.__esModule = true;
 exports.SectorContrato = void 0;
-var contrato_entity_1 = require("src/contratos/entities/contrato.entity");
-var sector_entity_1 = require("src/sector/entities/sector.entity");
 var typeorm_1 = require("typeorm");
 var SectorContrato = /** @class */ (function () {
     function SectorContrato() {
@@ -29,14 +27,6 @@ var SectorContrato = /** @class */ (function () {
     __decorate([
         typeorm_1.Column({ type: 'date', nullable: true, "default": null })
     ], SectorContrato.prototype, "fechaBaja");
-    __decorate([
-        typeorm_1.ManyToOne(function () { return contrato_entity_1.Contrato; }, function (contrato) { return contrato.sectorContrato; }),
-        typeorm_1.JoinColumn({ name: 'contratosId' })
-    ], SectorContrato.prototype, "contrato");
-    __decorate([
-        typeorm_1.ManyToOne(function () { return sector_entity_1.Sector; }, function (sector) { return sector.sectorContrato; }),
-        typeorm_1.JoinColumn({ name: 'sectoresId' })
-    ], SectorContrato.prototype, "sector");
     SectorContrato = __decorate([
         typeorm_1.Entity({ name: 'sectorContrato' })
     ], SectorContrato);

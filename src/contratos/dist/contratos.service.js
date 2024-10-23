@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -50,10 +61,12 @@ var common_1 = require("@nestjs/common");
 var typeorm_1 = require("@nestjs/typeorm");
 var contrato_entity_1 = require("./entities/contrato.entity");
 var socio_entity_1 = require("src/socios/entities/socio.entity");
+var sector_entity_1 = require("src/sector/entities/sector.entity");
 var ContratosService = /** @class */ (function () {
-    function ContratosService(contratoRepository, socioRepository, dataSource) {
+    function ContratosService(contratoRepository, socioRepository, sectorRepository, dataSource) {
         this.contratoRepository = contratoRepository;
         this.socioRepository = socioRepository;
+        this.sectorRepository = sectorRepository;
         this.dataSource = dataSource;
     }
     ContratosService.prototype.create = function (createContratoDto) {
@@ -93,12 +106,91 @@ var ContratosService = /** @class */ (function () {
     ContratosService.prototype.update = function (id, updateContratoDto) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log('Sin sector');
                 return [2 /*return*/, this.contratoRepository.update(id, updateContratoDto)];
+            });
+        });
+    };
+    ContratosService.prototype.updateSector = function (id, sectorId, updateContratoDto) {
+        return __awaiter(this, void 0, void 0, function () {
+            var queryRunner, contrato, sector, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryRunner = this.dataSource.createQueryRunner();
+                        queryRunner.connect;
+                        queryRunner.startTransaction();
+                        return [4 /*yield*/, this.validateContrato(id)];
+                    case 1:
+                        contrato = _a.sent();
+                        return [4 /*yield*/, this.validateSector(sectorId)];
+                    case 2:
+                        sector = _a.sent();
+                        return [4 /*yield*/, this.validateCodigoContrato(updateContratoDto.codigo)];
+                    case 3:
+                        _a.sent();
+                        console.log('Con sector: ', sector);
+                        _a.label = 4;
+                    case 4:
+                        _a.trys.push([4, 10, 12, 14]);
+                        return [4 /*yield*/, queryRunner.manager.update(contrato_entity_1.Contrato, id, __assign(__assign({}, updateContratoDto), { sector: sector }))];
+                    case 5:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.decrement(sector_entity_1.Sector, { id: contrato.sector.id }, 'numeroSocios', 1)];
+                    case 6:
+                        _a.sent();
+                        // await queryRunner.manager.update(Sector, contrato.sector.id, {
+                        //   numeroSocios: () => 'numeroSocios -1',
+                        // });
+                        return [4 /*yield*/, queryRunner.manager.increment(sector_entity_1.Sector, { id: sectorId }, 'numeroSocios', 1)];
+                    case 7:
+                        // await queryRunner.manager.update(Sector, contrato.sector.id, {
+                        //   numeroSocios: () => 'numeroSocios -1',
+                        // });
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.manager.increment(sector_entity_1.Sector, { id: sectorId }, 'numeroCodigos', 1)];
+                    case 8:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.commitTransaction()];
+                    case 9: 
+                    // await queryRunner.manager.update(Sector, sectorId, {
+                    //   numeroSocios: () => 'numeroSocios +1',
+                    //   numeroCodigos: () => 'numeroCodigos +1',
+                    // });
+                    return [2 /*return*/, _a.sent()];
+                    case 10:
+                        error_1 = _a.sent();
+                        return [4 /*yield*/, queryRunner.rollbackTransaction()];
+                    case 11:
+                        _a.sent();
+                        throw new common_1.BadRequestException('Error al actualizar el sector del contrato: ', error_1);
+                    case 12: return [4 /*yield*/, queryRunner.release()];
+                    case 13:
+                        _a.sent();
+                        return [7 /*endfinally*/];
+                    case 14: return [2 /*return*/];
+                }
             });
         });
     };
     ContratosService.prototype.remove = function (id) {
         return "This action removes a #" + id + " contrato";
+    };
+    ContratosService.prototype.validateContrato = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var contratoFound;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.contratoRepository.findOneBy({ id: id })];
+                    case 1:
+                        contratoFound = _a.sent();
+                        if (!contratoFound) {
+                            throw new common_1.BadRequestException('Contrato not found');
+                        }
+                        return [2 /*return*/, contratoFound];
+                }
+            });
+        });
     };
     ContratosService.prototype.validateCodigoContrato = function (codigo) {
         return __awaiter(this, void 0, void 0, function () {
@@ -132,10 +224,27 @@ var ContratosService = /** @class */ (function () {
             });
         });
     };
+    ContratosService.prototype.validateSector = function (id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var sectorFound;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.sectorRepository.findOneBy({ id: id })];
+                    case 1:
+                        sectorFound = _a.sent();
+                        if (!sectorFound) {
+                            throw new common_1.BadRequestException('Sector not found');
+                        }
+                        return [2 /*return*/, sectorFound];
+                }
+            });
+        });
+    };
     ContratosService = __decorate([
         common_1.Injectable(),
         __param(0, typeorm_1.InjectRepository(contrato_entity_1.Contrato)),
-        __param(1, typeorm_1.InjectRepository(socio_entity_1.Socio))
+        __param(1, typeorm_1.InjectRepository(socio_entity_1.Socio)),
+        __param(2, typeorm_1.InjectRepository(sector_entity_1.Sector))
     ], ContratosService);
     return ContratosService;
 }());

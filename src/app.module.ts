@@ -25,7 +25,6 @@ import { ConfigModule } from '@nestjs/config';
 import { EmpleadoUsuarioModule } from './empleado.usuario/empleado.usuario.module';
 import { ContratoMedidorModule } from './contrato.medidor/contrato.medidor.module';
 import { SocioContratoModule } from './socio.contrato/socio.contrato.module';
-import { SectorContratoModule } from './sector.contrato/sector.contrato.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -74,7 +73,6 @@ import { SectorContratoModule } from './sector.contrato/sector.contrato.module';
     EmpleadoUsuarioModule,
     ContratoMedidorModule,
     SocioContratoModule,
-    SectorContratoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
