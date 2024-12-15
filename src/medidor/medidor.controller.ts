@@ -10,6 +10,7 @@ import {
 import { MedidorService } from './medidor.service';
 import { CreateMedidorDto } from './dto/create-medidor.dto';
 import { UpdateMedidorDto } from './dto/update-medidor.dto';
+import { ChangeMedidorDto } from './dto/change-medidor.dto';
 
 @Controller('medidor')
 export class MedidorController {
@@ -28,6 +29,26 @@ export class MedidorController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.medidorService.findOne(+id);
+  }
+
+  @Patch('/change-medidor/:id')
+  changeMedidor(
+    @Param('id') updateMedidorId: string,
+    @Body() changeMedidorDto: ChangeMedidorDto,
+  ) {
+    const { newMedidor: createMedidorDto, updateMedidor: updateMedidorDto } =
+      changeMedidorDto;
+    console.log(
+      'Recibido:',
+      createMedidorDto,
+      updateMedidorDto,
+      updateMedidorId,
+    );
+    return this.medidorService.changeMedidor(
+      createMedidorDto,
+      updateMedidorDto,
+      +updateMedidorId,
+    );
   }
 
   @Patch(':id')

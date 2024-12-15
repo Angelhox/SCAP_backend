@@ -14,3 +14,9 @@ Como?
 Con un Script de Javascript
 Para? 
 Poder dar de baja una relacion entre el socio y el contrato en los casos en los que se necesita cambiar el socio al que le pertenece un contrato con el fin de llevar un registro de "a que socio le pretenecia ese contrato"
+Cambio: 3
+Cambiar la configuracion del campo codigo en la tabla medidor a "no unico" 
+Para?
+Poder actualizar el medidor manteniendo el registro anterior y el nuevo con el mismo codigo, sin embargo cuando se utilize el código de fabrica del medidor este campo si debe ser unico.
+Como?
+Desde la entity del backend y si es necesario el gestor de base de datos.

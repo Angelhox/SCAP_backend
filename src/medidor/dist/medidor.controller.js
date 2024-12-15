@@ -24,6 +24,11 @@ var MedidorController = /** @class */ (function () {
     MedidorController.prototype.findOne = function (id) {
         return this.medidorService.findOne(+id);
     };
+    MedidorController.prototype.changeMedidor = function (updateMedidorId, changeMedidorDto) {
+        var createMedidorDto = changeMedidorDto.newMedidor, updateMedidorDto = changeMedidorDto.updateMedidor;
+        console.log('Recibido:', createMedidorDto, updateMedidorDto, updateMedidorId);
+        return this.medidorService.changeMedidor(createMedidorDto, updateMedidorDto, +updateMedidorId);
+    };
     MedidorController.prototype.update = function (id, updateMedidorDto) {
         return this.medidorService.update(+id, updateMedidorDto);
     };
@@ -41,6 +46,11 @@ var MedidorController = /** @class */ (function () {
         common_1.Get(':id'),
         __param(0, common_1.Param('id'))
     ], MedidorController.prototype, "findOne");
+    __decorate([
+        common_1.Patch('/change-medidor/:id'),
+        __param(0, common_1.Param('id')),
+        __param(1, common_1.Body())
+    ], MedidorController.prototype, "changeMedidor");
     __decorate([
         common_1.Patch(':id'),
         __param(0, common_1.Param('id')), __param(1, common_1.Body())

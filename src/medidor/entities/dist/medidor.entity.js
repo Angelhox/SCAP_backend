@@ -17,7 +17,7 @@ var Medidor = /** @class */ (function () {
         typeorm_1.PrimaryGeneratedColumn()
     ], Medidor.prototype, "id");
     __decorate([
-        typeorm_1.Column({ length: 15, type: 'char', nullable: true, unique: true })
+        typeorm_1.Column({ length: 15, type: 'char', nullable: false, unique: false })
     ], Medidor.prototype, "codigo");
     __decorate([
         typeorm_1.Column({

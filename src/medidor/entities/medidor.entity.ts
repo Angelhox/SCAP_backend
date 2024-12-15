@@ -15,7 +15,9 @@ export class Medidor {
   @Index({ unique: true })
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ length: 15, type: 'char', nullable: true, unique: true })
+  // Cambio 3
+  // @Column({ length: 15, type: 'char', nullable: true, unique: true })
+  @Column({ length: 15, type: 'char', nullable: false, unique: false })
   codigo: string;
   @Column({
     type: 'date',
